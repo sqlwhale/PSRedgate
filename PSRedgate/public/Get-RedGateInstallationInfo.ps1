@@ -59,15 +59,15 @@ function Get-RedGateInstallationInfo
 
             }
             Write-Output $installationInformation | Where-Object ApplicationName -Like "*$ApplicationName*"
+            $private:PrivateData['installationInformation'] = $installationInformation
         }
         catch
         {
-            Write-Host  -Object $_.Exception | Format-List -Force
+            Write-Output  $_.Exception | Format-List -Force
             break
         }
     }
     END
     {
-        $private:PrivateData['installationInformation'] = $installationInformation
     }
 }

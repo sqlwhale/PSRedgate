@@ -73,7 +73,7 @@ function Get-RedgateSQLBackupError
         }
         catch
         {
-            Write-Host  $_.Exception | Format-List -Force
+            Write-Output $_.Exception | Format-List -Force
             break
         }
     }

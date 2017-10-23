@@ -1,0 +1,9 @@
+site_name: PSRedgate
+repo_url: https://github.com/sqlwhale/PSRedgate
+theme: readthedocs
+pages:
+  - Home: index.md
+  - PSRedgate Basics:
+    - What is PSRedgate: about.md
+    - Quick Start: Quick-Start-Installation-and-Example.md
+  - Acknowledgements: acknowledgements.md

@@ -1,5 +1,8 @@
 # PSRedgate
 
+[![Build status](https://ci.appveyor.com/api/projects/status/tksvms0sygteap6o?svg=true)](https://ci.appveyor.com/project/sqlwhale/psredgate)
+[![Build status](https://ci.appveyor.com/api/projects/status/tksvms0sygteap6o/branch/master?svg=true)](https://ci.appveyor.com/project/sqlwhale/psredgate/branch/master)
+
 This module is designed to create an easy interface for Redgate's command line utilities. This allows you to use Redgate's applications via powershell and creates a seamless way to add the functionality of Redgate applications to your powershell modules.
 
 ## GitPitch PitchMe presentation

@@ -1,0 +1,1048 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Management.Automation.PSCustomObject</T>
+      <T>System.Object</T>
+    </TN>
+    <MS>
+      <S N="ErrorCode">500</S>
+      <S N="Description">General SQL Backup error.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="1">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">505</S>
+      <S N="Description">No valid SQL Backup file name entered._x000D__x000A_Check that the length of the path name does not exceed the number of characters for your operating system._x000D__x000A_If you are generating a backup file name using the &lt;DATABASE&gt; or &lt;AUTO&gt; tags, check that the database name does not contain invalid characters. For more information about tags, see File location tags._x000D__x000A_If you are backing up directly to a network share (not recommended), ensure the network share already exists, and that the account the SQL Backup Agent service logs on as (the startup account) has full permissions for the network share. To check the SQL Backup Agent service permissions, run the following command:_x000D__x000A_execute master..sqbutility 999, 'RWE', '\\testserver\backuplocation'If the SQL Backup Agent service has read (R), write (W), and execute (E) permissions, the command returns 1; 0 indicates failure._x000D__x000A_For more information about backing up to a network share, see Backing up and restoring on a network share.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="2">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">506</S>
+      <S N="Description">No valid backup sets found from backup history.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="3">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">507</S>
+      <S N="Description">No valid backup sets found from provided folder(s).</S>
+    </MS>
+  </Obj>
+  <Obj RefId="4">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">508</S>
+      <S N="Description">No valid full backup sets found from provided folder(s) for latest differential backup.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="5">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">510</S>
+      <S N="Description">Backup file exists. Will not overwrite. File name: &lt;value&gt;_x000D__x000A_Try specifying a file name format that does not result in identical file names. For more information about using tags to generate file names, see File location tags._x000D__x000A_To overwrite existing backup files, use the INIT argument.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="6">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">512</S>
+      <S N="Description">Backup file name (&lt;value&gt;) contains an invalid character (&lt;value&gt;)</S>
+    </MS>
+  </Obj>
+  <Obj RefId="7">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">515</S>
+      <S N="Description">Multi database backup file names must contain the &lt;AUTO&gt;, &lt;DATABASE&gt; or &lt;DATETIME&gt; tags._x000D__x000A_If you are backing up multiple databases, the backup file names must be unique. Use the &lt;AUTO&gt;, &lt;DATABASE&gt;, or &lt;DATETIME&gt; tags to achieve this. For more information about using tags to generate file names, see File location tags.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="8">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">516</S>
+      <S N="Description">Multi database operations cannot use MIRRORFILE option. _x000D__x000A_If you are backing up multiple databases, you cannot use the MIRRORFILE argument. For more information, see MIRRORFILE in The BACKUP command.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="9">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">518</S>
+      <S N="Description">File name exceeds limit of 259 characters: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="10">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">519</S>
+      <S N="Description">Multi-database undo file names must contain the &lt;DATABASE&gt; tag._x000D__x000A_If you are backing up logs for multiple databases and have specified the STANDBY keyword, the undo file names must be unique. You must use the &lt;DATABASE&gt; tag to do this. You can use other tags too, but the &lt;DATABASE&gt; tag must be present. For more information about using tags to generate file names, see File location tags.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="11">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">520</S>
+      <S N="Description">Output file exists. Will not overwrite. File name: &lt;value&gt;_x000D__x000A_When you use the CONVERT command, you must specify a unique file name for the destination file. For more information, see The CONVERT command.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="12">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">525</S>
+      <S N="Description">Folder does not exist. Folder name: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="13">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">526</S>
+      <S N="Description">Cannot find saved setting._x000D__x000A_Check that the SQL Backup Agent service startup account has read access to the following registry key and its values: HKEY_LOCAL_MACHINE\Software\Red Gate\SQL Backup\BackupSettings</S>
+    </MS>
+  </Obj>
+  <Obj RefId="14">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">527</S>
+      <S N="Description">None of the specified folders exist._x000D__x000A_Check the transaction log folder locations you have specified for this log shipping restore job.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="15">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">530</S>
+      <S N="Description">Non-existent backup file._x000D__x000A_Check the path of the backup file._x000D__x000A_If you are restoring from a backup file on a network share, ensure the startup user for the SQL Backup Agent service has permissions for the network share. For more information, see Backing up and restoring on a network share.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="16">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">540</S>
+      <S N="Description">No file name entered for the Microsoft Tape Format (MTF) file._x000D__x000A_When you use the CONVERT command, you must specify the path for the SQL Backup Pro files (.sqb) and the path for the MTF file. For more information, see The CONVERT command.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="17">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">550</S>
+      <S N="Description">Cannot have the same file names for the SQL Backup file and the converted file.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="18">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">560</S>
+      <S N="Description">File does not exist: &lt;value&gt;_x000D__x000A_Check the path of the backup file in the RESTORE SQBHEADERONLY command._x000D__x000A_If the backup file is on a network share, ensure the startup user for the SQL Backup Agent service has permissions for the network share. For more information, see Backing up and restoring on a network share.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="19">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">562</S>
+      <S N="Description">Object is a folder, not a file: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="20">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">564</S>
+      <S N="Description">Error reading file.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="21">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">566</S>
+      <S N="Description">Error reading files not in SQB path.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="22">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">570</S>
+      <S N="Description">File is not a SQL Backup file._x000D__x000A_Check the file you are restoring from is not a log file or native backup file.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="23">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">580</S>
+      <S N="Description">Failed to open file. Message: &lt;value&gt;_x000D__x000A_The file may be in use or there may be a permissions problem; ensure the startup user for the SQL Backup Agent service application has been granted the necessary permissions. For more information on the permissions required, see Permissions.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="24">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">581</S>
+      <S N="Description">Failed to disconnect existing connections to database.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="25">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">584</S>
+      <S N="Description">System databases must be restored with full recovery using the RECOVERY option.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="26">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">585</S>
+      <S N="Description">Cannot use multiple file names with the THREADCOUNT option.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="27">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">586</S>
+      <S N="Description">Failed to connect to SQL Server instance: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="28">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">587</S>
+      <S N="Description">Backup and restore operations are not allowed on database tempdb.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="29">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">588</S>
+      <S N="Description">You can only perform a full backup of the master database._x000D__x000A_Use BACKUP DATABASE to back up the entire master database.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="30">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">589</S>
+      <S N="Description">Cannot back up the log of the master database._x000D__x000A_Use BACKUP DATABASE to back up the entire master database.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="31">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">590</S>
+      <S N="Description">Insufficient space to perform process. Space required: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="32">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">591</S>
+      <S N="Description">Cannot disconnect existing users from the model database.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="33">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">592</S>
+      <S N="Description">The REPLACE option must be used when using the DISCONNECT_EXISTING option on an active database.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="34">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">595</S>
+      <S N="Description">Failed to create MTF file: &lt;value&gt;_x000D__x000A_Ensure the startup user for the SQL Backup Agent service application has been granted the necessary permissions. For more information on the permissions required, see Permissions.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="35">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">596</S>
+      <S N="Description">File is a native SQL Server backup file.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="36">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">597</S>
+      <S N="Description">Failed to read MTF header data.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="37">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">600</S>
+      <S N="Description">Multiple log file validation error for restore.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="38">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">605</S>
+      <S N="Description">Error creating backup file(s). No files could be created._x000D__x000A_Ensure the startup user for the SQL Backup Agent service application has been granted the necessary permissions. For more information on the permissions required, see Permissions.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="39">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">610</S>
+      <S N="Description">Error creating file handle for file: &lt;value&gt;_x000D__x000A_Ensure the startup user for the SQL Backup Agent service application has been granted the necessary permissions. For more information on the permissions required, see Permissions.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="40">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">612</S>
+      <S N="Description">Error reading file: unexpected end-of-file reached.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="41">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">613</S>
+      <S N="Description">Compressed data block not found in file.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="42">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">620</S>
+      <S N="Description">Error writing to backup file(s).</S>
+    </MS>
+  </Obj>
+  <Obj RefId="43">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">621</S>
+      <S N="Description">Error writing to backup file(s) due to insufficient disk space.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="44">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">622</S>
+      <S N="Description">Error flushing contents of backup file(s).</S>
+    </MS>
+  </Obj>
+  <Obj RefId="45">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">623</S>
+      <S N="Description">Error setting file pointer position for backup file(s).</S>
+    </MS>
+  </Obj>
+  <Obj RefId="46">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">624</S>
+      <S N="Description">Error writing header (LSN data) to backup file (&lt;value&gt;): &lt;value&gt;.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="47">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">625</S>
+      <S N="Description">Error writing header (backup size) to backup file (&lt;value&gt;): &lt;value&gt;.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="48">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">627</S>
+      <S N="Description">Failed to set file pointer to beginning of file (&lt;value&gt;) to write backup size: &lt;value&gt;.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="49">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">628</S>
+      <S N="Description">Failed to set file pointer to beginning of file (&lt;value&gt;) to read header data: &lt;value&gt;.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="50">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">629</S>
+      <S N="Description">Failed to set file pointer to beginning of file (&lt;value&gt;) to write LSN data: &lt;value&gt;.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="51">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">630</S>
+      <S N="Description">Cannot run a multi device backup with the MIRRORFILE option._x000D__x000A_If you are backing up to multiple devices, you cannot use the MIRRORFILE option. For more information, see MIRRORFILE in The BACKUP command.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="52">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">632</S>
+      <S N="Description">Failed to set file pointer to current position of file.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="53">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">636</S>
+      <S N="Description">BACKUP WITH CONTINUE_AFTER_ERROR successfully generated a backup of the damaged database.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="54">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">637</S>
+      <S N="Description">RESTORE WITH CONTINUE_AFTER_ERROR was successful but some damage was encountered.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="55">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">638</S>
+      <S N="Description">The backup was written with damaged data by a BACKUP WITH CONTINUE_AFTER_ERROR.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="56">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">640</S>
+      <S N="Description">Cannot specify more than 32 devices._x000D__x000A_You can specify up to 32 devices in a backup or restore operation. See The BACKUP command and The RESTORE command.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="57">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">642</S>
+      <S N="Description">Invalid STOPAT value (&lt;value&gt;): &lt;value&gt;._x000D__x000A_For more information on using STOPAT when restoring from a transaction log backup, see STOPAT in The RESTORE command.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="58">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">660</S>
+      <S N="Description">VDI library not registered._x000D__x000A_This may be because the VDI library has become unregistered when other SQL Server components have been uninstalled. To register this library manually, first locate the sqlvdi.dll file (for 64-bit versions of SQL Server, you need to locate the 32-bit version of the file). You can then use the regsvr32 command, for example:_x000D__x000A_regsvr32 sqlvdi.dllIf you are using more than one version of SQL Server, locate the latest copy of the sqlvdi.dll file; later versions of this file are compatible with earlier versions of SQL Server.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="59">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">662</S>
+      <S N="Description">The version of the VDI library used does not match the version of SQL Server. Please install the correct version of sqlvdi.dll on this server._x000D__x000A_For example, this may occur if you have reinstalled SQL Server 2000, and you are attempting to back up a SQL Server 2005 database.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="60">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">665</S>
+      <S N="Description">Beta trial period has expired.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="61">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">667</S>
+      <S N="Description">Trial period has expired._x000D__x000A_If you need more time to complete your evaluation, email dba.info@red-gate.com.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="62">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">668</S>
+      <S N="Description">64-bit servers require Professional license._x000D__x000A_Please contact dba.info@red-gate.com for more information.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="63">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">669</S>
+      <S N="Description">Failed to access registry key_x000D__x000A_Run the command via SSMS or the command line to get output from SQL Backup that shows which registry key it failed to access, and the account name used to access the key._x000D__x000A_Either grant the SQL Backup Agent service startup account rights to read from and write to the registry node, or change the SQL Backup Agent service startup account to another user account that has the necessary rights. You'll need to restart the service if you choose the second option.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="64">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">680</S>
+      <S N="Description">The media set for database '&lt;value&gt;' has &lt;value&gt; family members but only &lt;value&gt; are provided. All members must be provided. _x000D__x000A_The backup set that you are trying to restore is split across multiple files; the number of files you have specified does not match the number of files in the backup set._x000D__x000A_If this error occurs when restoring transaction log backups, it may be because SQL Backup Pro cannot put the files in the correct order because it cannot read the Log Sequence Numbers from the header files or the information is not there. You can restore these files one at a time in date order, specifying either WITH NORECOVERY or WITH STANDBY. This will negate the need for the SQL Backup header. See also SQL Backup warning code 170._x000D__x000A_Alternatively, the SQBHeaderFix utility can be used to repair the files by recreating the SQL Backup header using information from the native SQL header. You can download the utility from: ftp://support.red-gate.com/patches/sql_backup/Testing_Utilities/SQBHeaderFix.zip</S>
+    </MS>
+  </Obj>
+  <Obj RefId="65">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">700</S>
+      <S N="Description">No process type entered.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="66">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">705</S>
+      <S N="Description">When using the FULLIFREQUIRED option, the backup file name(s) must contain the dynamic tags, &lt;DATABASE&gt; and &lt;TYPE&gt;._x000D__x000A_If you are using the FULLIFREQUIRED option, the backup file name must include the &lt;DATABASE&gt; and &lt;TYPE&gt; tags. The &lt;AUTO&gt; tag may be used if the file name format includes the &lt;DATABASE&gt; and &lt;TYPE&gt; tags._x000D__x000A_For more information about using tags to generate file names, see File location tags._x000D__x000A_For more information about the FULLIFREQUIRED option, see FULLIFREQUIRED in The BACKUP command.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="67">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">710</S>
+      <S N="Description">Wrong password entered._x000D__x000A_The RESTORE command contains an incorrect password, or if you are restoring from an encrypted backup file, the PASSWORD option is missing.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="68">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">715</S>
+      <S N="Description">Backup file is not encrypted._x000D__x000A_You do not need to specify the PASSWORD option in the RESTORE command.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="69">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">716</S>
+      <S N="Description">None of the backup files are encrypted._x000D__x000A_You do not need to specify the PASSWORD option in the RESTORE LOG command.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="70">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">720</S>
+      <S N="Description">No database name entered.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="71">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">740</S>
+      <S N="Description">Failed to get LSN data from server.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="72">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">742</S>
+      <S N="Description">Failed to get LSN data from server (0 rows returned).</S>
+    </MS>
+  </Obj>
+  <Obj RefId="73">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">743</S>
+      <S N="Description">Failed to get file position value from server.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="74">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">760</S>
+      <S N="Description">LSN data from server is blank.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="75">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">765</S>
+      <S N="Description">Failed to read file header (&lt;value&gt;): &lt;value&gt;. Read &lt;value&gt; bytes.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="76">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">775</S>
+      <S N="Description">Failed to open file to write LSN data. Another process might be locking this file: &lt;value&gt; _x000D__x000A_SQL Backup Pro writes a header block to each backup file upon completion of the backup. In some cases, antivirus applications may lock the backup file immediately after creation, denying SQL Backup Pro access.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="77">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">780</S>
+      <S N="Description">General conversion error.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="78">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">782</S>
+      <S N="Description">Browse via SQL: registry value not set.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="79">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">784</S>
+      <S N="Description">Browse via SQL: not sysadmin.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="80">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">790</S>
+      <S N="Description">General thread error or SQL Server error._x000D__x000A_Refer to your SQL Server documentation.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="81">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">800</S>
+      <S N="Description">File requires SQL Backup version &lt;value&gt; or higher to restore. Current version is &lt;value&gt;.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="82">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">810</S>
+      <S N="Description">Error retrieving SQL Server login name: &lt;value&gt;_x000D__x000A_Check that the SQL Backup Agent service startup user has read access to the following registry key and its values: HKEY_LOCAL_MACHINE\Software\Red Gate\SQL Backup\BackupSettings.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="83">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">820</S>
+      <S N="Description">Validation of all backup files failed.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="84">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">821</S>
+      <S N="Description">DBCC CHECKDB: Database integrity check completed with errors.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="85">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">822</S>
+      <S N="Description">Encrypted files require a password to be successfully restored.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="86">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">825</S>
+      <S N="Description">To run database consistency checks, the database must be restored using the STANDBY or RECOVERY options. To recover the database after all checks have completed, include the RECOVERY parameter in the VERIFY option.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="87">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">826</S>
+      <S N="Description">To run database consistency checks where multiple backup sets may be restored, the database must be restored using the STANDBY option. To recover the database after all checks have completed, include the RECOVERY parameter in the VERIFY option.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="88">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">828</S>
+      <S N="Description">Failed to recover database.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="89">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">829</S>
+      <S N="Description">Failed to drop database.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="90">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">830</S>
+      <S N="Description">Cannot disconnect existing users when the log is not backed up with the NORECOVERY or STANDBY options.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="91">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">840</S>
+      <S N="Description">File validation failed.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="92">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">850</S>
+      <S N="Description">SQL Backup syntax error._x000D__x000A_For more information on SQL Backup Pro syntax, see Scripting SQL Backup Pro.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="93">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">870</S>
+      <S N="Description">No command passed to SQL Backup._x000D__x000A_The command is empty.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="94">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">880</S>
+      <S N="Description">BACKUP DATABASE permission denied in database: &lt;value&gt;_x000D__x000A_Check that you have backup rights to the relevant database._x000D__x000A_Ensure that the account the SQL Backup Agent service logs on as (the startup account) is a Windows Authenticated account with sysadmin privileges on the SQL Server. For more information about permissions required, see Permissions.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="95">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">882</S>
+      <S N="Description">Database offline.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="96">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">890</S>
+      <S N="Description">RESTORE DATABASE permission denied for database: &lt;value&gt;_x000D__x000A_Check that you have the appropriate restore rights.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="97">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">900</S>
+      <S N="Description">Failed to read backup file header (0 rows).</S>
+    </MS>
+  </Obj>
+  <Obj RefId="98">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">910</S>
+      <S N="Description">Failed to read file list details (0 rows).</S>
+    </MS>
+  </Obj>
+  <Obj RefId="99">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">915</S>
+      <S N="Description">Failed to update backup history table (BACKUPSET).</S>
+    </MS>
+  </Obj>
+  <Obj RefId="100">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">916</S>
+      <S N="Description">Failed to update restore history table (RESTOREHISTORY).</S>
+    </MS>
+  </Obj>
+  <Obj RefId="101">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">917</S>
+      <S N="Description">Failed to update backup history table (BACKUPSET). Media set ID is blank.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="102">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">918</S>
+      <S N="Description">Failed to retrieve restore history id.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="103">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">920</S>
+      <S N="Description">Failed to update backup history table (BACKUPMEDIAFAMILY).</S>
+    </MS>
+  </Obj>
+  <Obj RefId="104">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">930</S>
+      <S N="Description">File read error for compressed data. Backup file is incomplete or corrupted (FileBufferRemainingBytes: &lt;value&gt;)</S>
+    </MS>
+  </Obj>
+  <Obj RefId="105">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">932</S>
+      <S N="Description">File read error for compressed data size. Backup file is incomplete or corrupted (CompressedDataSize: &lt;value&gt;)</S>
+    </MS>
+  </Obj>
+  <Obj RefId="106">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">934</S>
+      <S N="Description">File read error for device index. Backup file is incomplete or corrupted (FileBufferRemainingBytes: &lt;value&gt;)</S>
+    </MS>
+  </Obj>
+  <Obj RefId="107">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">940</S>
+      <S N="Description">File read error for &lt;value&gt; bytes (balance &lt;value&gt; bytes). Backup file is incomplete or corrupted.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="108">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">942</S>
+      <S N="Description">File read error for &lt;value&gt; padding bytes (balance &lt;value&gt; bytes). Backup file is incomplete.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="109">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">950</S>
+      <S N="Description">Data decompression error: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="110">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">960</S>
+      <S N="Description">Failed to service command. Error code: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="111">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">970</S>
+      <S N="Description">Backup file does not exist. File name: &lt;value&gt; (for restores).</S>
+    </MS>
+  </Obj>
+  <Obj RefId="112">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">985</S>
+      <S N="Description">Error creating critical section: &lt;value&gt;.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="113">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">990</S>
+      <S N="Description">Invalid number of virtual devices: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="114">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">995</S>
+      <S N="Description">Error creating event for virtual device: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="115">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">1000*</S>
+      <S N="Description">Failed to create virtual device. Error code: &lt;value&gt; _x000D__x000A_If the secondary error is -2139684857: Failed to recognize SQL Server instance name, make sure that the SQL Backup Agent service startup account (the account the service logs on as) has read access to the SQL Server service. You can do this using Registry Editor, or with the Windows sc sdset and sc sdshow commands:_x000D__x000A_Open Registry Editor (regedit.exe) and locate the HKEY_LOCAL_MACHINE\Software\Microsoft\MSSQLServer\Setup subkey. Right-click the subkey and select Permissions. In the Permissions for Setup dialog, ensure the SQL Backup Agent service startup account has at least read permissions. _x000D__x000A_Run the commands sc &lt;server name&gt; sdshow &lt;SQL Backup Agent service name&gt; to find out which permissions the service user has, then use sc &lt;server name&gt; sdset &lt;SQL Backup Agent service name&gt; to set the permissions. For more information, refer to your Microsoft Windows documentation. _x000D__x000A_You can find out which user the SQL Backup Agent service logs on as from the Windows Services panel (services.msc). Note that a SQL Backup Agent service is created for each SQL Server instance that SQL Backup Pro is installed on._x000D__x000A_This error may also arise if the account the SQL Backup Agent service logs on as is specified in the Windows Domain format (DOMAIN\USERNAME) rather than the User Principal Name format (username@domain). To change the account name format:_x000D__x000A_Open the Windows Services panel (services.msc) and find the SQL Backup Agent service for the affected SQL Server instance, SQL Backup Agent-&lt;instance name&gt;. The SQL Backup Agent service for the local instance is called SQL Backup Agent. _x000D__x000A_Right-click the service and select Properties. _x000D__x000A_On the Log On tab, change the format of the account name to UPN format. _x000D__x000A_Restart the SQL Backup Agent service. </S>
+    </MS>
+  </Obj>
+  <Obj RefId="116">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">1010*</S>
+      <S N="Description">Failed to get configuration from server. Check that the SQL Server instance is running and that you have the SQL Server System Administrator server role. Error code: &lt;value&gt;. [Also check that the database is not currently in use.]_x000D__x000A_For certain timeout conditions, a more detailed description may be presented with this error code:_x000D__x000A_Failed to get the configuration from the server because the timeout interval has elapsed. Check that the SQL Server instance is running, that you have the SQL Server System Administrator server role, and that no other processes are blocking the backup or restore process. If the problem recurs, try increasing the value of the VDITimeout registry setting in HKEY_LOCAL_MACHINE\SOFTWARE\Red Gate\SQL Backup\BackupSettingsGlobal\&lt;instance name&gt;._x000D__x000A_or,_x000D__x000A_Failed to get the configuration from the server because the timeout interval has elapsed. SQL Backup required &lt;bytes&gt; bytes of free SQL Server memory, which was not available. You can reduce the memory requirements by reducing the number of backup files/threads used in the backup._x000D__x000A_When backing up or restoring, SQL Backup Pro will wait up to 30 seconds for a response from the SQL Server, after which the backup or restore request will timeout. To change the timeout interval, configure the VDITimeout registry entry:_x000D__x000A_Open Registry Editor and locate the SQL Backup BackupSettingsGlobal key for the relevant SQL Server instance: HKEY_LOCAL_MACHINE\SOFTWARE\Red Gate\SQL Backup\BackupSettingsGlobal\&lt;instance name&gt; _x000D__x000A_Create a DWORD entry called 'VDITimeout'.  _x000D__x000A_Set the value to a duration that you feel is adequate for the SQL Server to respond. The duration must be entered in seconds (in hexadecimal). </S>
+    </MS>
+  </Obj>
+  <Obj RefId="117">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">1020*</S>
+      <S N="Description">Failed to open virtual device. Error code: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="118">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">1030*</S>
+      <S N="Description">Failed to create VirtualDeviceSet component. Error code: &lt;value&gt;_x000D__x000A_SQL Backup Pro uses the SQL Virtual Device Interface library to perform backups and restores. This library is contained in a file named sqlvdi.dll and is installed and registered when you install SQL Server. This error may arise when backing up and restoring databases for two reasons:_x000D__x000A_A problem with permissions. The SQL Backup Agent service startup account must be a member of the SQL Server sysadmin role in order to access VDI libraries. For more information about required permissions, see Permissions. _x000D__x000A_The sqlvdi.dll file is missing or has been unregistered, or an incorrect version of SQL Server has been installed: _x000D__x000A_Check the version of the sqlvdi.dll file installed on your SQL Server. _x000D__x000A_Open Registry Editor and open HKEY_CLASSES_ROOT\CLSID (32-bit edition of Windows) or HKEY_CLASSES_ROOT\Wow6432Node\CLSID (64-bit edition of Windows).  _x000D__x000A_Locate the key {40700425-0080-11d2-851f-00c04fc21759}. The key's value InprocServer32 contains the path to sqlvdi.dll.   _x000D__x000A_Ensure that the file exists and that the SQL Server startup account has access to it._x000D__x000A__x000D__x000A_A 64-bit edition of SQL Server will have two copies of sqlvdi.dll, one for 32-bit installations and one for 64-bit installations. Because SQL Backup Pro is a 32-bit application, the 32-bit VDI will be used by SQL Backup Pro while SQL Server will use the 64-bit version. Therefore, it is important that the two copies of sqlvdi.dll are the same version. Using the file locations indicated by the InprocServer32 key, examine the properties of both sqlvdi.dll files to ensure the version numbers match.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="119">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">1040*</S>
+      <S N="Description">Process terminated unexpectedly.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="120">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">1050</S>
+      <S N="Description">Failed to close VDI.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="121">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">1100</S>
+      <S N="Description">SQL Server error._x000D__x000A_More information about selected SQL Server errors is provided in SQL Server errors. For all other errors, refer to your SQL Server documentation.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="122">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">2010</S>
+      <S N="Description">Command exceeds permitted length.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="123">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5000</S>
+      <S N="Description">General inter-process communication (IPC) error.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="124">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5100</S>
+      <S N="Description">Error creating SQB service event: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="125">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5102</S>
+      <S N="Description">Error creating SQB service event (already exists): &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="126">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5110</S>
+      <S N="Description">Error opening SQB service event: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="127">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5120</S>
+      <S N="Description">Error setting SQB service event: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="128">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5130</S>
+      <S N="Description">Error creating client event: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="129">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5140</S>
+      <S N="Description">Error creating mutex: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="130">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5142</S>
+      <S N="Description">Error creating mutex (already exists): &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="131">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5145</S>
+      <S N="Description">Failed to start SQL Backup Agent service._x000D__x000A_To start the SQL Backup Agent service manually, use the Windows Services panel.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="132">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5146</S>
+      <S N="Description">Inadequate rights to start SQL Backup Agent service. Please start the SQL Backup Agent service manually._x000D__x000A_To start the SQL Backup Agent service manually, use the Windows Services panel.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="133">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5148</S>
+      <S N="Description">SQL Backup cluster resource is stopped._x000D__x000A_The SQL Backup Agent service is stopped on the active node in the cluster. This may be because a failover is in progress (in which case the service should restart automatically within a few minutes), or because the service has failed, or has been deliberately stopped._x000D__x000A_You can re-enable the service with the Windows Cluster Administrator tool (Windows Server 2003) or Failover Cluster Management tool (Windows Server 2008).</S>
+    </MS>
+  </Obj>
+  <Obj RefId="134">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5150</S>
+      <S N="Description">Error opening mutex: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="135">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5160</S>
+      <S N="Description">Error acquiring mutex: &lt;value&gt;_x000D__x000A_A mutex is a communication channel between SQL Backup Pro and the SQL Server processes. In certain circumstances a mutex can become orphaned. When SQL Backup Pro attempts to create a new mutex, the request will be rejected by Windows because a mutex of the same name already exists._x000D__x000A_Rebooting the operating system should resolve this problem. Alternatively, use Process Explorer to identify the process which is causing the problem:_x000D__x000A_Download Process Explorer from http://technet.microsoft.com/en-us/sysinternals/bb896653.aspx and run it. _x000D__x000A_On the Find menu click Find Handle or DLL to open the Process Explorer Search dialog box. _x000D__x000A_Type SQBMutex into the Handle or DLL substring box and click Search. _x000D__x000A_For a SQL Server instance that is functioning correctly, the handles \BaseNamedObjects\SQBMutex_ and \BaseNamedObjects\SQBMutex_data_ will exist as part of the process SQBCoreService.exe (the SQL Backup Agent). For instances other than the default, the instance name will be appended to the handle (e.g. \BaseNamedObjects\SQBMutex_SQL2005). _x000D__x000A_Select the problematic instance from the list to highlight the entry in the Process Explorer main window. _x000D__x000A_Right click this entry and select Close Handle. repeat this for the corresponding data handle. _x000D__x000A_You should now be able to start the SQL Backup Agent service and connect to the server.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="136">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5170</S>
+      <S N="Description">Error releasing mutex: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="137">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5200</S>
+      <S N="Description">Error creating memory mapped file: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="138">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5202</S>
+      <S N="Description">Error creating memory mapped file (already exists): &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="139">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5210</S>
+      <S N="Description">Error opening memory mapped file: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="140">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5220</S>
+      <S N="Description">Error mapping to memory mapped file: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="141">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5230</S>
+      <S N="Description">Error creating named pipe: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="142">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5240</S>
+      <S N="Description">SQB service did not acknowledge receipt of data: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="143">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5250</S>
+      <S N="Description">Failed to connect to Service Control Manager: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="144">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5260</S>
+      <S N="Description">Failed to connect to SQL Backup service: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="145">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5270</S>
+      <S N="Description">Error: SQL Backup Agent service is no longer running.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="146">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5280</S>
+      <S N="Description">Error creating client event.</S>
+    </MS>
+  </Obj>
+  <Obj RefId="147">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5290</S>
+      <S N="Description">Error creating local data store mutex (already exists): &lt;value&gt;</S>
+    </MS>
+  </Obj>
+  <Obj RefId="148">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="ErrorCode">5292</S>
+      <S N="Description">Error creating local data store mutex: &lt;value&gt;</S>
+    </MS>
+  </Obj>
+</Objs>

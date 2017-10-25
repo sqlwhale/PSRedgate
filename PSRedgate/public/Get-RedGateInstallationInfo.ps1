@@ -10,7 +10,12 @@ function Get-RedGateInstallationInfo
     .EXAMPLE
     Get-RedGateInstallationInfo
 
-    This will return a hashtable filled with the redgate applications installed on this machine.
+    This will return a hash-table filled with the redgate applications installed on this machine.
+
+    .EXAMPLE
+    Get-RedGateInstallationInfo -ApplicationName 'SQL Prompt'
+
+    This will return a hash-table containing with the redgate application 'SQL Prompt' installed on this machine.
 
     .NOTES
     This cmdlet is useful because it prevents us having to affect the user's path, while still making it quick to access
@@ -53,13 +58,13 @@ function Get-RedGateInstallationInfo
             {
                 $installationInformation = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*, HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* |
                     Select-Object DisplayName, DisplayVersion, Publisher, InstallDate, InstallLocation |
-                    Select-Object *, @{Label = "ApplicationName"; Expression = {$($_.DisplayName -replace "\d+$", '').Trim()}} |
-                    Select-Object *, @{Label = "ExecutableName"; Expression = {$executables[$_.ApplicationName]}} |
+                    Select-Object *, @{Label = "ApplicationName"; Expression = {$($_.DisplayName -replace "\d+$", '').Trim()}} | # removes the version number from the application
+                    Select-Object *, @{Label = "ExecutableName"; Expression = {$executables[$_.ApplicationName]}} | # appends the exe name to the collection
                     Where-Object Publisher -Like 'Red Gate*'
 
             }
-            Write-Output $installationInformation | Where-Object ApplicationName -Like "*$ApplicationName*"
             $private:PrivateData['installationInformation'] = $installationInformation
+            Write-Output $installationInformation | Where-Object ApplicationName -Like "*$ApplicationName*"
         }
         catch
         {

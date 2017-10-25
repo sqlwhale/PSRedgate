@@ -8,5 +8,9 @@
   "editor.tabSize": 4,
   "[json]": {
     "editor.tabSize": 2
-  }
+  },
+  "cSpell.words": [
+    "invoke",
+    "sqlcmd"
+  ]
 }

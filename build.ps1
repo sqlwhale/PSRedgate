@@ -13,8 +13,19 @@ Write-Output "Starting build"
 # Grab nuget bits, install modules, set build variables, start build.
 Write-Output "  Install Dependent Modules"
 Get-PackageProvider -Name NuGet -ForceBootstrap | Out-Null
-Install-Module InvokeBuild, PSDeploy, BuildHelpers, PSScriptAnalyzer -force -Scope CurrentUser
-Install-Module Pester -Force -SkipPublisherCheck -Scope CurrentUser
+
+$modules = @('InvokeBuild', 'PSDeploy', 'BuildHelpers', 'PSScriptAnalyzer')
+foreach ($module in $modules)
+{
+    if (-not(Get-Module -ListAvailable -Name $module))
+    {
+        Install-Module InvokeBuild, PSDeploy, BuildHelpers, PSScriptAnalyzer -force -Scope CurrentUser
+    }
+}
+if (-not(Get-Module -ListAvailable -Name $module))
+{
+    Install-Module Pester -Force -SkipPublisherCheck -Scope CurrentUser
+}
 
 Write-Output "  Import Dependent Modules"
 Import-Module InvokeBuild, BuildHelpers, PSScriptAnalyzer

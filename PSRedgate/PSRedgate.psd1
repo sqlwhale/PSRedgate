@@ -12,7 +12,7 @@
     RootModule        = 'PSRedgate.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.1.2'
+    ModuleVersion     = '0.1.7'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -69,7 +69,7 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = @('Get-RedGateInstallationInfo','Get-RedgateSQLBackupError')
+    FunctionsToExport = @('Get-RedgateBackupFileInfo','Get-RedgateInstallationInfo','Get-RedgateSQLBackupError')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport   = @()
@@ -92,25 +92,29 @@
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData       = @{
 
-        PSData = @{
+        PSData          = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            # Tags = @()
+            Tags         = @()
 
             # A URL to the license for this module.
-            # LicenseUri = ''
+            LicenseUri   = ''
 
             # A URL to the main website for this project.
-            # ProjectUri = ''
+            ProjectUri   = ''
 
             # A URL to an icon representing this module.
-            # IconUri = ''
+            IconUri      = ''
 
             # ReleaseNotes of this module
-            # ReleaseNotes = ''
+            ReleaseNotes = 'These are my notes!'
 
         } # End of PSData hashtable
 
+        # The location that we store data files needed for caching
+        DataLocation    = "$PSScriptRoot\data"
+        PublicLocation  = "$PSScriptRoot\public"
+        PrivateLocation = "$PSScriptRoot\private"
     } # End of PrivateData hashtable
 
     # HelpInfo URI of this module

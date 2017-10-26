@@ -12,7 +12,7 @@
     RootModule        = 'PSRedgate.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.1.9'
+    ModuleVersion     = '0.2.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -69,7 +69,7 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = @('Get-RedgateBackupFileInfo','Get-RedgateInstallationInfo','Get-RedgateSQLBackupError','Invoke-RedgateSQLCompare')
+    FunctionsToExport = @('Get-RedgateBackupFileInfo','Get-RedGateInstallationInfo','Get-RedgateSQLBackupError','Invoke-RedgateSQLCompare')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport   = @()

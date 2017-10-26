@@ -20,6 +20,106 @@ function Invoke-RedgateSQLCompare
 
         This will apply the schema snapshot taken from a database and synchronize the schema to EXAMPLEDB2 on server SQLEXAMPLE1
 
+    .EXAMPLE
+        Invoke-RedgateSQLCompare -Database1 'WidgetStaging' -Database2 'WidgetProduction' -Synchronize
+
+        To compare the database structure of WidgetStaging with WidgetProduction, and deploy the databases by updating WidgetProduction:
+
+    .EXAMPLE
+        Invoke-RedgateSQLCompare -Project 'C:\SQLCompare\Projects\widgets.scp'
+
+        Using an existing SQL Compare project from the command line
+        This is useful, for example, as you can't choose or create a custom filter from the command line, and specifying complex object selections using a regular expression can be unwieldy.
+        To use a project you have saved as "widgets.scp" from the command line:
+            * When you use a project, all objects that were selected for comparison when you saved the project are automatically included.
+            * When you use the command line, your project option selections are ignored and the defaults are used. Use /options to specify any additional options you want to use with a command line project.
+            * For more information, see Options used in the command line.
+            * If you want to include or exclude objects from an existing project, you must modify your selection using the user interface.
+            * You can't use the /include and /exclude switches with /project.
+            * Scheduling or automating a comparison or deployment You can use the Microsoft Windows Scheduled Task wizard to schedule a comparison by creating a script to run the comparison.
+
+    .EXAMPLE
+        Invoke-RedgateSQLCompare -Database1 'WidgetStaging' -Database2 'WidgetProduction' -Synchronize -MakeBackup
+
+        Backing up the target database
+        You can back up the target database before deployment. To back up WidgetProduction using the default settings.
+
+    .EXAMPLE
+        Invoke-RedgateSQLCompare -Database1 'WidgetStaging' -Database2 'WidgetProduction' -Synchronize -MakeBackup -BackupProvider 'SQB' -BackupType 'Differential' -BackupFolder 'C:\Backups' -BackupFile 'MyBackup.sqb' -BackupCompression 2 -BackupEncryption -BackupPassword $BackupPassword -BackupNumberOfThreads 3
+
+        Backing up the target database
+        To back up WidgetProduction using custom settings.
+        When dealing with this many parameters, it would probably be easier to create a hash and splat it on the cmdlet.
+        $params = @{
+            Database1 = 'WidgetStaging'
+            Database2 = 'WidgetProduction'
+            Synchronize
+            MakeBackup
+            BackupProvider = 'SQB'
+            BackupType = 'Differential'
+            BackupFolder = 'C:\Backups'
+            BackupFile = 'MyBackup.sqb'
+            BackupCompression = 2
+            BackupEncryption =
+            BackupPassword = $BackupPassword
+            BackupNumberOfThreads = 3
+        }
+        Invoke-RedgateSQLCompare @params
+
+
+    .EXAMPLE
+        Invoke-RedgateSQLCompare -Database 'WidgetProduction' -Makescripts 'C:\WidgetProductionScripts'
+
+        Creating a scripts folder
+        You can create a folder of object creation scripts representing the schema of a data source.
+        To export WidgetProduction to a scripts folder:
+        * If the folder does not already exist, it is created.
+        * All the subfolders containing different object types in the schema are automatically created beneath the specified folder.
+        * If the folder does exist, it must be empty or the export will fail.
+
+
+    .EXAMPLE
+        Invoke-RedgateSQLCompare -Scripts "C:\WidgetProductionScripts" -Database2 'WidgetStaging'
+
+        Using a scripts folder or snapshot as a data source
+            To compare the WidgetProduction scripts folder with the WidgetStaging database:
+
+
+    .EXAMPLE
+        Invoke-RedgateSQLCompare -Database1 'WidgetStaging' -Scripts2 'C:\WidgetProductionScripts" -Synchronize -Force
+
+        To compare the WidgetStaging database with the WidgetProduction scripts folder and deploy the scripts to the folder:
+            The /force switch specifies that any read-only files in the scripts folder that need to be edited during deployment will be made writable.
+            If you do not include the /force switch and read-only files need to be modified, the deployment will fail and an error message will be displayed.
+
+
+    .EXAMPLE
+        Invoke-RedgateSQLCompare -SnapShot1 'C:\Snapshots\WidgetProd_1.snp' -Snapshot2 'C:\Snapshots\WidgetProd_2.snp'
+
+        To compare two snapshots of WidgetStaging.
+
+
+    .EXAMPLE
+        Invoke-RedgateSQLCompare -Database1 'WidgetStaging' -Database2 'WidgetProduction' -ScriptFile 'C:\SQLScripts\Widgets.sql' -Force
+
+        To output the deployment SQL script, for example for auditing purposes, and overwrite the file if it already exists.
+
+
+    .EXAMPLE
+        Invoke-RedgateSQLCompare -Backup1 'D:\MSSQL\BACKUP\WidgetDev_20080807_143235.sqb' -Database2 'WidgetLive'
+
+        Comparing using a backup as a data source.
+
+
+    .EXAMPLE
+        Invoke-RedgateSQLCompare -Backup1 'D:\MSSQL\BACKUP\WidgetDev.bak' -BackupSet1 '2008-09-23 Full Backup' -Database2 'WidgetLive'
+
+        To compare a backup of WidgetDev with WidgetLive:
+        If you are comparing a backup set that contains multiple files, use the /backupset1 switch to specify the files which make up the first backup set,
+        and use the /backupset2 switches to specify the files which make up the second:
+        If the backup set switches are not specified, SQL Compare uses the latest backup set.
+        To specify more than one backup file, separate the file names using semicolons -Backup1 "D:\WidgetDev_Full.bak";"D:\WidgetDev_Diff.bak"
+
     .NOTES
         This is still sort of raw, I'd like to sit down and map out all of the related parameters and create parameter sets out of them.
         I would also like to create a lot of examples of things you an do with this cmdlet.
@@ -668,12 +768,15 @@ function Invoke-RedgateSQLCompare
         # This will tell the cmdlet to execute the command instead of printing out the command
         [switch] $Execute
     )
-    BEGIN { }
+    BEGIN
+    {
+    }
     PROCESS
     {
         try
         {
-            #These are the command line options that are not used as options and are not needed below
+            # These are the command line options that are not used as options and are not needed below.
+            # If you add parameters and don't want them to pass through as options, put them in this blacklist.
             $configuration = @('Execute', 'Verbose')
             $params = [ordered]@{}
             $arguments = ''
@@ -684,7 +787,8 @@ function Invoke-RedgateSQLCompare
 
             if (-not($installationInfo))
             {
-                Write-Warning 'Unable to locate an installation of Redgate SQL Compare on this machine. Please ensure that the '
+                Write-Warning 'Unable to locate an installation of Redgate SQL Compare on this machine. Please ensure that the application is installed on this machine.'
+                break
             }
 
             #this will give you the exec location
@@ -702,21 +806,21 @@ function Invoke-RedgateSQLCompare
             {
                 if ($param.Value)
                 {
-                    if ($param.Value.GetType().Name -eq 'SwitchParameter')
+                    $paramType = $param.Value.GetType().Name
+                    $paramKey = $param.Key.ToString().ToLower()
+                    $paramValue = $param.Value.ToString().ToLower()
+
+                    if ($paramType -eq 'SwitchParameter')
                     {
-                        $arguments += "/$($param.Key.ToString().ToLower()) "
+                        $arguments += "/$paramKey "
                     }
-                    elseif ($param.Key.ToString() -eq 'SQLServerName')
+                    elseif ($paramType -eq 'string')
                     {
-                        $arguments += "/server:`"$($param.Value.ToString())`" "
-                    }
-                    elseif ($param.Value.GetType().Name -eq 'string')
-                    {
-                        $arguments += "/$($param.Key.ToString().ToLower()):`"$($param.Value.ToString())`" "
+                        $arguments += "/$($paramKey):`"$paramValue`" "
                     }
                     else
                     {
-                        $arguments += "/$($param.Key.ToString().ToLower()):$($param.Value.ToString()) "
+                        $arguments += "/$($paramKey):$paramValue "
                     }
                 }
             }
@@ -732,5 +836,7 @@ function Invoke-RedgateSQLCompare
             break;
         }
     }
-    END { }
+    END
+    {
+    }
 }

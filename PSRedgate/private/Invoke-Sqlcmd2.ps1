@@ -5,10 +5,10 @@ function Invoke-Sqlcmd2
         Runs a T-SQL script.
 
     .DESCRIPTION
-        Runs a T-SQL script. Invoke-Sqlcmd2 runs the whole scipt and only captures the first selected result set, such as the output of PRINT statements when -verbose parameter is specified.
+        Runs a T-SQL script. Invoke-Sqlcmd2 only returns message output, such as the output of PRINT statements when -verbose parameter is specified.
         Paramaterized queries are supported.
 
-        Help details below borrowed from Invoke-Sqlcmd
+        Help details below borrowed from Invoke-Sqlcmd & Invoke-SQLcmd2, literally just changed the name - JW
 
     .PARAMETER ServerInstance
         One or more ServerInstances to query. For default instances, only specify the computer name: "MyComputer". For named instances, use the format "ComputerName\InstanceName".
@@ -157,9 +157,6 @@ function Invoke-Sqlcmd2
                                              - Added ErrorAction SilentlyContinue handling to Fill method
         v1.6.0                               - Added SQLConnection parameter and handling.  Is there a more efficient way to handle the parameter sets?
                                              - Fixed SQLConnection handling so that it is not closed (we now only close connections we create)
-        v1.6.1       - Shiyang Qiu           - Fixed the verbose option and SQL error handling conflict
-        v1.6.2       - Shiyang Qiu           - Fixed the .DESCRIPTION.
-                                             - Fixed the non SQL error handling and added Finally Block to close connection.
 
     .LINK
         https://github.com/RamblingCookieMonster/PowerShell
@@ -195,7 +192,7 @@ function Invoke-Sqlcmd2
             ValueFromPipelineByPropertyName = $true,
             ValueFromRemainingArguments = $false,
             HelpMessage = 'SQL Server Instance required...' )]
-        [Alias( 'Instance', 'Instances', 'ComputerName', 'Server', 'Servers' )]
+        [Alias( 'Instance', 'Instances', 'ComputerName', 'Server', 'Servers', 'sqlserver', 'SQLServerName' )]
         [ValidateNotNullOrEmpty()]
         [string[]]
         $ServerInstance,
@@ -204,6 +201,7 @@ function Invoke-Sqlcmd2
             Mandatory = $false,
             ValueFromPipelineByPropertyName = $true,
             ValueFromRemainingArguments = $false)]
+        [Alias('dbname')]
         [string]
         $Database,
 
@@ -217,6 +215,7 @@ function Invoke-Sqlcmd2
             Mandatory = $true,
             ValueFromPipelineByPropertyName = $true,
             ValueFromRemainingArguments = $false )]
+        [Alias('qry')]
         [string]
         $Query,
 
@@ -323,6 +322,7 @@ function Invoke-Sqlcmd2
             $filePath = $(Resolve-Path $InputFile).path
             $Query = [System.IO.File]::ReadAllText("$filePath")
         }
+        $VerbosePreference = 'SilentlyContinue'
 
         Write-Verbose "Running Invoke-Sqlcmd2 with ParameterSet '$($PSCmdlet.ParameterSetName)'.  Performing query '$Query'"
 
@@ -436,7 +436,7 @@ function Invoke-Sqlcmd2
 
                 $conn = New-Object System.Data.SqlClient.SQLConnection
                 $conn.ConnectionString = $ConnectionString
-                Write-Debug "ConnectionString $ConnectionString"
+                Write-Verbose "ConnectionString $ConnectionString"
 
                 Try
                 {
@@ -452,7 +452,7 @@ function Invoke-Sqlcmd2
             #Following EventHandler is used for PRINT and RAISERROR T-SQL statements. Executed when -Verbose parameter specified by caller
             if ($PSBoundParameters.Verbose)
             {
-                $conn.FireInfoMessageEventOnUserErrors = $false # Shiyang, $true will change the SQL exception to information
+                $conn.FireInfoMessageEventOnUserErrors = $true
                 $handler = [System.Data.SqlClient.SqlInfoMessageEventHandler] { Write-Verbose "$($_)" }
                 $conn.add_InfoMessage($handler)
             }
@@ -477,45 +477,25 @@ function Invoke-Sqlcmd2
             Try
             {
                 [void]$da.fill($ds)
+                if (-not $PSBoundParameters.ContainsKey('SQLConnection'))
+                {
+                    $conn.Close()
+                }
             }
-            Catch [System.Data.SqlClient.SqlException] # For SQL exception
+            Catch
             {
                 $Err = $_
-
-                Write-Verbose "Capture SQL Error"
-
-                if ($PSBoundParameters.Verbose) {Write-Verbose "SQL Error:  $Err"} #Shiyang, add the verbose output of exception
+                if (-not $PSBoundParameters.ContainsKey('SQLConnection'))
+                {
+                    $conn.Close()
+                }
 
                 switch ($ErrorActionPreference.tostring())
                 {
                     {'SilentlyContinue', 'Ignore' -contains $_} {}
                     'Stop' {     Throw $Err }
-                    'Continue' { Throw $Err}
-                    Default {    Throw $Err}
-                }
-            }
-            Catch # For other exception
-            {
-                Write-Verbose "Capture Other Error"
-
-                $Err = $_
-
-                if ($PSBoundParameters.Verbose) {Write-Verbose "Other Error:  $Err"}
-
-                switch ($ErrorActionPreference.tostring())
-                {
-                    {'SilentlyContinue', 'Ignore' -contains $_} {}
-                    'Stop' {     Throw $Err}
-                    'Continue' { Throw $Err}
-                    Default {    Throw $Err}
-                }
-            }
-            Finally
-            {
-                #Close the connection
-                if (-not $PSBoundParameters.ContainsKey('SQLConnection'))
-                {
-                    $conn.Close()
+                    'Continue' { Write-Error $Err}
+                    Default {    Write-Error $Err}
                 }
             }
 
@@ -561,4 +541,5 @@ function Invoke-Sqlcmd2
             }
         }
     }
-} #Invoke-Sqlcmd2
+    end { }
+}

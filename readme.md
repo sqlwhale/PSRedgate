@@ -1,4 +1,4 @@
-# PSRedgate
+![PSRedgate](/docs/logo.png)
 
 [![Build status](https://ci.appveyor.com/api/projects/status/tksvms0sygteap6o/branch/master?svg=true)](https://ci.appveyor.com/project/sqlwhale/psredgate/branch/master)
 

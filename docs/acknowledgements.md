@@ -1,4 +1,4 @@
-I want to thank everyone that has submitted feedback,ideas and contributions to this project. Some individuals deserve as special thank you for helping make this project a success.
+I want to thank everyone that has submitted feedback, ideas, and contributions to this project. Some individuals deserve a special thank you for helping make this project a success.
 
 ## Justin Whaley
 

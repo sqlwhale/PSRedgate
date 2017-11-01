@@ -175,7 +175,7 @@ function Invoke-Sqlcmd2
     #>
 
     [CmdletBinding( DefaultParameterSetName = 'Ins-Que' )]
-    [Diagnostics.CodeAnalysis.SuppressMessage("PSPossibleIncorrectComparisonWithNull")]
+    [Diagnostics.CodeAnalysis.SuppressMessage("PSPossibleIncorrectComparisonWithNull", '')]
     [OutputType([System.Management.Automation.PSCustomObject], [System.Data.DataRow], [System.Data.DataTable], [System.Data.DataTableCollection], [System.Data.DataSet])]
     param(
         [Parameter( ParameterSetName = 'Ins-Que',

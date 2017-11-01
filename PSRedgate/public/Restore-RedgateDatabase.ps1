@@ -47,18 +47,6 @@ function Restore-RedgateDatabase
         # The location that you want these restores to be pulled from
         [string] $FileLocation,
 
-        [Parameter()]
-        # If this command should be built for the stored procedure
-        [switch] $CommandLine,
-
-        [Parameter()]
-        # If this command should execute the backup, or output the command.
-        [switch] $Execute,
-
-        [Parameter()]
-        # If this command use the replication location to find the backup files.
-        [switch] $Replication,
-
         [parameter()]
         # If the backup is encrypted, pass a credential object with the password needed to decrypt the file.
         [System.Management.Automation.PSCredential] $DecryptionCredential,
@@ -217,11 +205,11 @@ function Restore-RedgateDatabase
 
         [Parameter()]
         #Specifies the password to be used with encrypted backup files.
-        [securestring] $PASSWORD,
+        [SecureString] $PASSWORD,
 
         [Parameter()]
         #Specifies the password file to be used with encrypted backup files.
-        [securestring] $PASSWORDFILE,
+        [SecureString] $PASSWORDFILE,
 
         [Parameter()]
         #Specifies that the database should be restored, even if another database of that name already exists. The existing database will be deleted. REPLACE is required to prevent a database of a different name being overwritten by accident. REPLACE is not required to overwrite a database which matches the name recorded in the backup.
@@ -280,9 +268,6 @@ function Restore-RedgateDatabase
                 'RestoreAs'
                 'DatabaseName'
                 'Disk'
-                'Execute'
-                'CommandLine'
-                'Replication'
                 'Encrypted'
                 'Credential'
                 'DecryptionCredential'
@@ -293,6 +278,7 @@ function Restore-RedgateDatabase
                 'READONLY'
                 'DEFAULT_LOCATIONS'
                 'WhatIf'
+                'Verbose'
             )
 
             $options = [ordered]@{}
@@ -411,6 +397,10 @@ function Restore-RedgateDatabase
                 # this is kind of involved, but super useful. It lets you rename the database when you restore it and figures out a lot of stuff for you.
                 if ($_.Key -eq 'RestoreAs' -and -not([string]::IsNullOrEmpty($_.Value)))
                 {
+                    if (-not($SourceSQLServerName))
+                    {
+                        $SourceSQLServerName = $TargetSQLServerName
+                    }
                     $databaseFiles = Get-SQLServerDatabaseFiles -SQLServerName $SourceSQLServerName -DatabaseName $DatabaseName
                     if (-not($databaseFiles))
                     {
@@ -458,7 +448,7 @@ function Restore-RedgateDatabase
                     else
                     {
                         Write-Verbose "Couldn't find the database on the source server. I'm going to have to guess what the database files was named. PROTIP: this might not work."
-                        $options.Add("MOVE-''$DatabaseName''-TO", "$($defaultTargetLocations.DefaultData)\$RestoreAs.ldf")
+                        $options.Add("MOVE-''$($DatabaseName)_log''-TO", "$($defaultTargetLocations.DefaultData)\$($RestoreAs)_log.ldf")
                     }
                 }
             }
@@ -468,60 +458,9 @@ function Restore-RedgateDatabase
                 $options.Add('PASSWORD', $DecryptionCredential.Password)
             }
 
-            $with = 'WITH '
+            $arguments = Get-RedgateSQLBackupParameter -Parameters $options
 
-            #Build the with string so that it can be added to the command
-            foreach ($option in $options.GetEnumerator())
-            {
-                $paramType = $option.Value.GetType().Name
-                $paramName = $option.Key.ToString().ToLower()
-                $paramValue = $option.Value.ToString()
-
-                if ($paramValue)
-                {
-                    if (($paramType -eq 'SwitchParameter'))
-                    {
-                        $with += "$paramName, "
-                    }
-                    elseif ($paramName -eq 'password')
-                    {
-                        $unsecureString = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($option.Value)
-                        $with += "PASSWORD = ''$([System.Runtime.InteropServices.Marshal]::PtrToStringAuto($unsecureString))'', "
-                    }
-                    elseif ($paramName -eq 'passwordfile')
-                    {
-                        $unsecureString = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($option.Value)
-                        $with += "PASSWORD = ''FILE:$([System.Runtime.InteropServices.Marshal]::PtrToStringAuto($unsecureString))'', "
-                    }
-                    elseif ($paramType -eq 'String' -and $paramName -notlike 'ERASEFILES*')
-                    {
-                        if ($paramName.Contains('-'))
-                        {
-                            $with += "$($paramName.Replace('-', ' ')) ''$paramValue'', "
-                        }
-                        else
-                        {
-                            $with += "$paramName = ''$paramValue'', "
-                        }
-                    }
-                    else
-                    {
-                        $with += "$($paramName.Replace('-','')) = $paramValue, "
-                    }
-                }
-            }
-
-            #Strip off the trailing comma and space
-            if ($options.count -gt 0)
-            {
-                $with = $with.TrimEnd(', ')
-            }
-            else
-            {
-                $with = ''
-            }
-
-            $restoreCommand = "EXEC master..sqlbackup '-SQL ""RESTORE $backupType [$(@{$true=$DatabaseName;$false=$RestoreAs}[-not ($RestoreAs)])] FROM $Disks $with""'"
+            $restoreCommand = "EXEC master..sqlbackup '-SQL ""RESTORE $backupType [$(@{$true=$DatabaseName;$false=$RestoreAs}[-not ($RestoreAs)])] FROM $Disks WITH $arguments""'"
 
 
             if ($PSCmdlet.ShouldProcess($TargetSQLServerName, $restoreCommand))

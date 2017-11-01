@@ -69,7 +69,7 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = @('Get-RedgateBackupFileInfo','Get-RedgateInstallationInfo','Get-RedgateSQLBackupError','Invoke-RedgateSQLCompare','Restore-RedgateDatabase')
+    FunctionsToExport = @('Get-RedgateBackupFileInfo', 'Get-RedgateInstallationInfo', 'Get-RedgateSQLBackupError', 'Invoke-RedgateSQLCompare', 'Restore-RedgateDatabase')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport   = @()
@@ -95,16 +95,16 @@
         PSData          = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags         = @()
+            Tags         = @('Redgate', 'Automation')
 
             # A URL to the license for this module.
-            LicenseUri   = ''
+            LicenseUri   = 'https://github.com/sqlwhale/PSRedgate/blob/master/LICENSE'
 
             # A URL to the main website for this project.
-            ProjectUri   = ''
+            ProjectUri   = 'https://github.com/sqlwhale/PSRedgate'
 
             # A URL to an icon representing this module.
-            IconUri      = ''
+            IconUri      = 'https://raw.githubusercontent.com/sqlwhale/PSRedgate/master/docs/logo.png'
 
             # ReleaseNotes of this module
             ReleaseNotes = 'These are my notes!'

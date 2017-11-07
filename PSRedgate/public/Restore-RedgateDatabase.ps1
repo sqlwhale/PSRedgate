@@ -334,7 +334,7 @@ function Restore-RedgateDatabase
                 }
                 else
                 {
-                    $Disks = -join ($TypeDirectories | ForEach-Object {"DISK = ''$fileLocation\$DatabaseName\$_\*.sqb'', "})
+                    $Disks = -join ($TypeDirectories | ForEach-Object {"DISK = ''$fileLocation\$DatabaseName\$PSItem\*.sqb'', "})
                     $Disks = $Disks.Trim().Substring(0, $Disks.Length - 2)
                     $Disks += " $Type"
                 }
@@ -378,24 +378,24 @@ function Restore-RedgateDatabase
             # This handles special situations for custom parameters.
             $PSBoundParameters.GetEnumerator()| ForEach-Object {
                 # This is the default route. All other instructions will be handled differently
-                if ($_.Key -notin $configuration)
+                if ($PSItem.Key -notin $configuration)
                 {
-                    $options.Add($_.Key, $_.Value)
+                    $options.Add($PSItem.Key, $PSItem.Value)
                 }
 
-                if ($_.Key -eq 'READONLY')
+                if ($PSItem.Key -eq 'READONLY')
                 {
                     $options.Add('STANDBY', "$($StandbyLocation)\UNDO_$DatabaseName.dat")
                 }
 
-                if ($_.Key -eq 'DEFAULT_LOCATIONS' -and -not($RestoreAs))
+                if ($PSItem.Key -eq 'DEFAULT_LOCATIONS' -and -not($RestoreAs))
                 {
                     $options.Add('MOVE-DATAFILES-TO', $defaultTargetLocations.DefaultData)
                     $options.Add('MOVE-LOGFILES-TO', $defaultTargetLocations.DefaultLog)
                 }
 
                 # this is kind of involved, but super useful. It lets you rename the database when you restore it and figures out a lot of stuff for you.
-                if ($_.Key -eq 'RestoreAs' -and -not([string]::IsNullOrEmpty($_.Value)))
+                if ($PSItem.Key -eq 'RestoreAs' -and -not([string]::IsNullOrEmpty($PSItem.Value)))
                 {
                     if (-not($SourceSQLServerName))
                     {
@@ -460,7 +460,7 @@ function Restore-RedgateDatabase
 
             $arguments = Get-RedgateSQLBackupParameter -Parameters $options
 
-            $restoreCommand = "EXEC master..sqlbackup '-SQL ""RESTORE $backupType [$(@{$true=$DatabaseName;$false=$RestoreAs}[-not ($RestoreAs)])] FROM $Disks WITH $arguments""'"
+            $restoreCommand = "EXEC master..sqlbackup '-SQL ""RESTORE $backupType [$(@{$true=$DatabaseName;$false=$RestoreAs}[-not ($RestoreAs)])] FROM $Disks $arguments""'"
 
 
             if ($PSCmdlet.ShouldProcess($TargetSQLServerName, $restoreCommand))
@@ -495,7 +495,7 @@ function Restore-RedgateDatabase
                 {
                     # exception message comes through like this: Exception calling "Fill" with "1" argument(s): "SQL Backup failed with exit code: 850;  SQL error code: 0"
                     # we want to get the SQL Backup exit code, and the SQL error code.
-                    $message = $_.Exception.Message.TrimEnd('"')
+                    $message = $PSItem.Exception.Message.TrimEnd('"')
                     $message = $message.Split('"')[-1]
                     $errors = $message.Split(';').Trim()
                     foreach ($item in $errors)
@@ -519,7 +519,7 @@ function Restore-RedgateDatabase
         }
         catch
         {
-            throw $_.Exception
+            throw $PSItem.Exception
             break
         }
     }

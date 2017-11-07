@@ -83,12 +83,12 @@ function Get-RedgateSQLBackupParameter
                     $with = $with.TrimEnd(', ')
                 }
 
-                Write-Output $with
+                Write-Output "WITH $with"
             }
         }
         catch
         {
-            Write-Output $_.Exception | Format-List -Force
+            Write-Output $PSItem.Exception | Format-List -Force
             break;
         }
     }

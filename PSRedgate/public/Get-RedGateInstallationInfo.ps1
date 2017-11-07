@@ -62,10 +62,10 @@ function Get-RedGateInstallationInfo
             {
                 $installationInformation = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*, HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* |
                     Select-Object DisplayName, DisplayVersion, Publisher, InstallDate, InstallLocation |
-                    Select-Object *, @{Label = "InstallationDate"; Expression = {[datetime]::ParseExact($_.InstallDate, "yyyyMMdd", $null).ToString('MM/dd/yyyy')}} | # casts install date to datetime
+                    Select-Object *, @{Label = "InstallationDate"; Expression = {[datetime]::ParseExact($PSItem.InstallDate, "yyyyMMdd", $null).ToString('MM/dd/yyyy')}} | # casts install date to datetime
                     Select-Object * -ExcludeProperty 'InstallDate' | # remove integer date
-                    Select-Object *, @{Label = "ApplicationName"; Expression = {$($_.DisplayName -replace "\d+$", '').Trim()}} | # removes the version number from the application
-                    Select-Object *, @{Label = "ExecutableName"; Expression = {$executables[$_.ApplicationName]}} | # appends the exe name to the collection
+                    Select-Object *, @{Label = "ApplicationName"; Expression = {$($PSItem.DisplayName -replace "\d+$", '').Trim()}} | # removes the version number from the application
+                    Select-Object *, @{Label = "ExecutableName"; Expression = {$executables[$PSItem.ApplicationName]}} | # appends the exe name to the collection
                     Where-Object Publisher -Like 'Red Gate*'
 
             }
@@ -77,7 +77,7 @@ function Get-RedGateInstallationInfo
             {
                 $result = $result | Group-Object ApplicationName |
                     ForEach-Object {
-                    $_.Group |
+                    $PSItem.Group |
                         Sort-Object DisplayVersion |
                         Select-Object -Last 1
                 }
@@ -86,7 +86,7 @@ function Get-RedGateInstallationInfo
         }
         catch
         {
-            Write-Output  $_.Exception | Format-List -Force
+            Write-Output  $PSItem.Exception | Format-List -Force
             break
         }
     }

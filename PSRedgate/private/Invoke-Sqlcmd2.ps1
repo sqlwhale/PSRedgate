@@ -175,18 +175,18 @@ function Invoke-Sqlcmd2
     #>
 
     [CmdletBinding( DefaultParameterSetName = 'Ins-Que' )]
-    [Diagnostics.CodeAnalysis.SuppressMessage("PSPossibleIncorrectComparisonWithNull")]
+    [Diagnostics.CodeAnalysis.SuppressMessage("PSPossibleIncorrectComparisonWithNull", '')]
     [OutputType([System.Management.Automation.PSCustomObject], [System.Data.DataRow], [System.Data.DataTable], [System.Data.DataTableCollection], [System.Data.DataSet])]
     param(
         [Parameter( ParameterSetName = 'Ins-Que',
-            Position = 0,
+
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true,
             ValueFromRemainingArguments = $false,
             HelpMessage = 'SQL Server Instance required...' )]
         [Parameter( ParameterSetName = 'Ins-Fil',
-            Position = 0,
+
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true,
@@ -197,7 +197,7 @@ function Invoke-Sqlcmd2
         [string[]]
         $ServerInstance,
 
-        [Parameter( Position = 1,
+        [Parameter(
             Mandatory = $false,
             ValueFromPipelineByPropertyName = $true,
             ValueFromRemainingArguments = $false)]
@@ -206,12 +206,12 @@ function Invoke-Sqlcmd2
         $Database,
 
         [Parameter( ParameterSetName = 'Ins-Que',
-            Position = 2,
+
             Mandatory = $true,
             ValueFromPipelineByPropertyName = $true,
             ValueFromRemainingArguments = $false )]
         [Parameter( ParameterSetName = 'Con-Que',
-            Position = 2,
+
             Mandatory = $true,
             ValueFromPipelineByPropertyName = $true,
             ValueFromRemainingArguments = $false )]
@@ -220,12 +220,12 @@ function Invoke-Sqlcmd2
         $Query,
 
         [Parameter( ParameterSetName = 'Ins-Fil',
-            Position = 2,
+
             Mandatory = $true,
             ValueFromPipelineByPropertyName = $true,
             ValueFromRemainingArguments = $false )]
         [Parameter( ParameterSetName = 'Con-Fil',
-            Position = 2,
+
             Mandatory = $true,
             ValueFromPipelineByPropertyName = $true,
             ValueFromRemainingArguments = $false )]
@@ -234,12 +234,12 @@ function Invoke-Sqlcmd2
         $InputFile,
 
         [Parameter( ParameterSetName = 'Ins-Que',
-            Position = 3,
+
             Mandatory = $false,
             ValueFromPipelineByPropertyName = $true,
             ValueFromRemainingArguments = $false)]
         [Parameter( ParameterSetName = 'Ins-Fil',
-            Position = 3,
+
             Mandatory = $false,
             ValueFromPipelineByPropertyName = $true,
             ValueFromRemainingArguments = $false)]
@@ -247,17 +247,17 @@ function Invoke-Sqlcmd2
         $Credential,
 
         [Parameter( ParameterSetName = 'Ins-Que',
-            Position = 4,
+
             Mandatory = $false,
             ValueFromRemainingArguments = $false)]
         [Parameter( ParameterSetName = 'Ins-Fil',
-            Position = 4,
+
             Mandatory = $false,
             ValueFromRemainingArguments = $false)]
         [switch]
         $Encrypt,
 
-        [Parameter( Position = 5,
+        [Parameter(
             Mandatory = $false,
             ValueFromPipelineByPropertyName = $true,
             ValueFromRemainingArguments = $false )]
@@ -265,19 +265,19 @@ function Invoke-Sqlcmd2
         $QueryTimeout = 600,
 
         [Parameter( ParameterSetName = 'Ins-Fil',
-            Position = 6,
+
             Mandatory = $false,
             ValueFromPipelineByPropertyName = $true,
             ValueFromRemainingArguments = $false )]
         [Parameter( ParameterSetName = 'Ins-Que',
-            Position = 6,
+
             Mandatory = $false,
             ValueFromPipelineByPropertyName = $true,
             ValueFromRemainingArguments = $false )]
         [Int32]
         $ConnectionTimeout = 15,
 
-        [Parameter( Position = 7,
+        [Parameter(
             Mandatory = $false,
             ValueFromPipelineByPropertyName = $true,
             ValueFromRemainingArguments = $false )]
@@ -285,26 +285,26 @@ function Invoke-Sqlcmd2
         [string]
         $As = "DataRow",
 
-        [Parameter( Position = 8,
+        [Parameter(
             Mandatory = $false,
             ValueFromPipelineByPropertyName = $true,
             ValueFromRemainingArguments = $false )]
         [System.Collections.IDictionary]
         $SqlParameters,
 
-        [Parameter( Position = 9,
+        [Parameter(
             Mandatory = $false )]
         [switch]
         $AppendServerInstance,
 
         [Parameter( ParameterSetName = 'Con-Que',
-            Position = 10,
+
             Mandatory = $false,
             ValueFromPipeline = $false,
             ValueFromPipelineByPropertyName = $false,
             ValueFromRemainingArguments = $false )]
         [Parameter( ParameterSetName = 'Con-Fil',
-            Position = 10,
+
             Mandatory = $false,
             ValueFromPipeline = $false,
             ValueFromPipelineByPropertyName = $false,

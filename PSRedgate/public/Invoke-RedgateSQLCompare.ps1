@@ -795,9 +795,9 @@ function Invoke-RedgateSQLCompare
             $cmdPath = (Join-Path $installationInfo.InstallLocation $installationInfo.ExecutableName)
 
             $PSBoundParameters.GetEnumerator()| ForEach-Object {
-                if ($_.Key -notin $configuration)
+                if ($PSItem.Key -notin $configuration)
                 {
-                    $params.Add($_.Key, $_.Value)
+                    $params.Add($PSItem.Key, $PSItem.Value)
                 }
             }
 
@@ -832,7 +832,7 @@ function Invoke-RedgateSQLCompare
         }
         catch
         {
-            Write-Output $_.Exception.Message
+            Write-Output $PSItem.Exception.Message
             break;
         }
     }

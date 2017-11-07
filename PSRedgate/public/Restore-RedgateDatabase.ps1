@@ -47,18 +47,6 @@ function Restore-RedgateDatabase
         # The location that you want these restores to be pulled from
         [string] $FileLocation,
 
-        [Parameter()]
-        # If this command should be built for the stored procedure
-        [switch] $CommandLine,
-
-        [Parameter()]
-        # If this command should execute the backup, or output the command.
-        [switch] $Execute,
-
-        [Parameter()]
-        # If this command use the replication location to find the backup files.
-        [switch] $Replication,
-
         [parameter()]
         # If the backup is encrypted, pass a credential object with the password needed to decrypt the file.
         [System.Management.Automation.PSCredential] $DecryptionCredential,
@@ -217,11 +205,11 @@ function Restore-RedgateDatabase
 
         [Parameter()]
         #Specifies the password to be used with encrypted backup files.
-        [securestring] $PASSWORD,
+        [SecureString] $PASSWORD,
 
         [Parameter()]
         #Specifies the password file to be used with encrypted backup files.
-        [securestring] $PASSWORDFILE,
+        [SecureString] $PASSWORDFILE,
 
         [Parameter()]
         #Specifies that the database should be restored, even if another database of that name already exists. The existing database will be deleted. REPLACE is required to prevent a database of a different name being overwritten by accident. REPLACE is not required to overwrite a database which matches the name recorded in the backup.
@@ -280,9 +268,6 @@ function Restore-RedgateDatabase
                 'RestoreAs'
                 'DatabaseName'
                 'Disk'
-                'Execute'
-                'CommandLine'
-                'Replication'
                 'Encrypted'
                 'Credential'
                 'DecryptionCredential'
@@ -293,6 +278,7 @@ function Restore-RedgateDatabase
                 'READONLY'
                 'DEFAULT_LOCATIONS'
                 'WhatIf'
+                'Verbose'
             )
 
             $options = [ordered]@{}
@@ -348,7 +334,7 @@ function Restore-RedgateDatabase
                 }
                 else
                 {
-                    $Disks = -join ($TypeDirectories | ForEach-Object {"DISK = ''$fileLocation\$DatabaseName\$_\*.sqb'', "})
+                    $Disks = -join ($TypeDirectories | ForEach-Object {"DISK = ''$fileLocation\$DatabaseName\$PSItem\*.sqb'', "})
                     $Disks = $Disks.Trim().Substring(0, $Disks.Length - 2)
                     $Disks += " $Type"
                 }
@@ -392,25 +378,29 @@ function Restore-RedgateDatabase
             # This handles special situations for custom parameters.
             $PSBoundParameters.GetEnumerator()| ForEach-Object {
                 # This is the default route. All other instructions will be handled differently
-                if ($_.Key -notin $configuration)
+                if ($PSItem.Key -notin $configuration)
                 {
-                    $options.Add($_.Key, $_.Value)
+                    $options.Add($PSItem.Key, $PSItem.Value)
                 }
 
-                if ($_.Key -eq 'READONLY')
+                if ($PSItem.Key -eq 'READONLY')
                 {
                     $options.Add('STANDBY', "$($StandbyLocation)\UNDO_$DatabaseName.dat")
                 }
 
-                if ($_.Key -eq 'DEFAULT_LOCATIONS' -and -not($RestoreAs))
+                if ($PSItem.Key -eq 'DEFAULT_LOCATIONS' -and -not($RestoreAs))
                 {
                     $options.Add('MOVE-DATAFILES-TO', $defaultTargetLocations.DefaultData)
                     $options.Add('MOVE-LOGFILES-TO', $defaultTargetLocations.DefaultLog)
                 }
 
                 # this is kind of involved, but super useful. It lets you rename the database when you restore it and figures out a lot of stuff for you.
-                if ($_.Key -eq 'RestoreAs' -and -not([string]::IsNullOrEmpty($_.Value)))
+                if ($PSItem.Key -eq 'RestoreAs' -and -not([string]::IsNullOrEmpty($PSItem.Value)))
                 {
+                    if (-not($SourceSQLServerName))
+                    {
+                        $SourceSQLServerName = $TargetSQLServerName
+                    }
                     $databaseFiles = Get-SQLServerDatabaseFiles -SQLServerName $SourceSQLServerName -DatabaseName $DatabaseName
                     if (-not($databaseFiles))
                     {
@@ -458,7 +448,7 @@ function Restore-RedgateDatabase
                     else
                     {
                         Write-Verbose "Couldn't find the database on the source server. I'm going to have to guess what the database files was named. PROTIP: this might not work."
-                        $options.Add("MOVE-''$DatabaseName''-TO", "$($defaultTargetLocations.DefaultData)\$RestoreAs.ldf")
+                        $options.Add("MOVE-''$($DatabaseName)_log''-TO", "$($defaultTargetLocations.DefaultData)\$($RestoreAs)_log.ldf")
                     }
                 }
             }
@@ -468,60 +458,9 @@ function Restore-RedgateDatabase
                 $options.Add('PASSWORD', $DecryptionCredential.Password)
             }
 
-            $with = 'WITH '
+            $arguments = Get-RedgateSQLBackupParameter -Parameters $options
 
-            #Build the with string so that it can be added to the command
-            foreach ($option in $options.GetEnumerator())
-            {
-                $paramType = $option.Value.GetType().Name
-                $paramName = $option.Key.ToString().ToLower()
-                $paramValue = $option.Value.ToString()
-
-                if ($paramValue)
-                {
-                    if (($paramType -eq 'SwitchParameter'))
-                    {
-                        $with += "$paramName, "
-                    }
-                    elseif ($paramName -eq 'password')
-                    {
-                        $unsecureString = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($option.Value)
-                        $with += "PASSWORD = ''$([System.Runtime.InteropServices.Marshal]::PtrToStringAuto($unsecureString))'', "
-                    }
-                    elseif ($paramName -eq 'passwordfile')
-                    {
-                        $unsecureString = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($option.Value)
-                        $with += "PASSWORD = ''FILE:$([System.Runtime.InteropServices.Marshal]::PtrToStringAuto($unsecureString))'', "
-                    }
-                    elseif ($paramType -eq 'String' -and $paramName -notlike 'ERASEFILES*')
-                    {
-                        if ($paramName.Contains('-'))
-                        {
-                            $with += "$($paramName.Replace('-', ' ')) ''$paramValue'', "
-                        }
-                        else
-                        {
-                            $with += "$paramName = ''$paramValue'', "
-                        }
-                    }
-                    else
-                    {
-                        $with += "$($paramName.Replace('-','')) = $paramValue, "
-                    }
-                }
-            }
-
-            #Strip off the trailing comma and space
-            if ($options.count -gt 0)
-            {
-                $with = $with.TrimEnd(', ')
-            }
-            else
-            {
-                $with = ''
-            }
-
-            $restoreCommand = "EXEC master..sqlbackup '-SQL ""RESTORE $backupType [$(@{$true=$DatabaseName;$false=$RestoreAs}[-not ($RestoreAs)])] FROM $Disks $with""'"
+            $restoreCommand = "EXEC master..sqlbackup '-SQL ""RESTORE $backupType [$(@{$true=$DatabaseName;$false=$RestoreAs}[-not ($RestoreAs)])] FROM $Disks $arguments""'"
 
 
             if ($PSCmdlet.ShouldProcess($TargetSQLServerName, $restoreCommand))
@@ -556,7 +495,7 @@ function Restore-RedgateDatabase
                 {
                     # exception message comes through like this: Exception calling "Fill" with "1" argument(s): "SQL Backup failed with exit code: 850;  SQL error code: 0"
                     # we want to get the SQL Backup exit code, and the SQL error code.
-                    $message = $_.Exception.Message.TrimEnd('"')
+                    $message = $PSItem.Exception.Message.TrimEnd('"')
                     $message = $message.Split('"')[-1]
                     $errors = $message.Split(';').Trim()
                     foreach ($item in $errors)
@@ -580,7 +519,7 @@ function Restore-RedgateDatabase
         }
         catch
         {
-            throw $_.Exception
+            throw $PSItem.Exception
             break
         }
     }

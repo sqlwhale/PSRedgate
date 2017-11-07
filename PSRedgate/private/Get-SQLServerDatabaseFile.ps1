@@ -93,7 +93,7 @@ function Get-SQLServerDatabaseFile
         }
         catch
         {
-            Write-Output $_.Exception | Format-List -Force
+            Write-Output $PSItem.Exception | Format-List -Force
             break;
         }
     }

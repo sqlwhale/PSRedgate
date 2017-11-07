@@ -8,9 +8,9 @@ $script:ManifestPath = "$Destination\$ModuleName.psd1"
 $script:Imports = ( 'private', 'public', 'classes' )
 $script:TestFile = "$PSScriptRoot\output\TestResults_PS$PSVersion`_$TimeStamp.xml"
 
-Task Default Build, Pester, UpdateSource, Publish
-Task Build CopyToOutput, BuildPSM1, BuildPSD1
-Task Pester Build, ImportModule, UnitTests, FullTests
+Task Default  Build, Pester, UpdateSource, Publish
+Task Build    CopyToOutput, BuildPSM1, BuildPSD1
+Task Pester   Build, ImportModule, UnitTests, FullTests
 
 Task Clean {
     $null = Remove-Item $Output -Recurse -ErrorAction Ignore
@@ -50,12 +50,12 @@ Task CopyToOutput {
     Get-ChildItem $source -File |
         where name -NotMatch "$ModuleName\.ps[dm]1" |
         Copy-Item -Destination $Destination -Force -PassThru |
-        ForEach-Object { "  Create [.{0}]" -f $_.fullname.replace($PSScriptRoot, '')}
+        ForEach-Object { "  Create [.{0}]" -f $PSItem.fullname.replace($PSScriptRoot, '')}
 
     Get-ChildItem $source -Directory |
         where name -NotIn $imports |
         Copy-Item -Destination $Destination -Recurse -Force -PassThru |
-        ForEach-Object { "  Create [.{0}]" -f $_.fullname.replace($PSScriptRoot, '')}
+        ForEach-Object { "  Create [.{0}]" -f $PSItem.fullname.replace($PSScriptRoot, '')}
 }
 
 Task BuildPSM1 -Inputs (Get-Item "$source\*\*.ps1") -Outputs $ModulePath {
@@ -92,7 +92,7 @@ Task BuildPSD1 -inputs (Get-ChildItem $Source -Recurse -File) -Outputs $Manifest
     Copy-Item "$source\$ModuleName.psd1" -Destination $ManifestPath
 
 
-    $functions = Get-ChildItem "$ModuleName\Public\*.ps1" | Where-Object { $_.name -notmatch 'Tests'} | Select-Object -ExpandProperty basename
+    $functions = Get-ChildItem "$ModuleName\Public\*.ps1" | Where-Object { $PSItem.name -notmatch 'Tests'} | Select-Object -ExpandProperty basename
     Set-ModuleFunctions -Name $ManifestPath -FunctionsToExport $functions
 
     Write-Output "  Detecting semantic versioning"
@@ -107,7 +107,7 @@ Task BuildPSD1 -inputs (Get-ChildItem $Source -Recurse -File) -Outputs $Manifest
         foreach ($parameter in $command.parameters.keys)
         {
             '{0}:{1}' -f $command.name, $command.parameters[$parameter].Name
-            $command.parameters[$parameter].aliases | Foreach-Object { '{0}:{1}' -f $command.name, $_}
+            $command.parameters[$parameter].aliases | Foreach-Object { '{0}:{1}' -f $command.name, $PSItem}
         }
     }
 
@@ -118,9 +118,9 @@ Task BuildPSD1 -inputs (Get-ChildItem $Source -Recurse -File) -Outputs $Manifest
 
     $bumpVersionType = 'Patch'
     '    Detecting new features'
-    $fingerprint | Where {$_ -notin $oldFingerprint } | % {$bumpVersionType = 'Minor'; "      $_"}
+    $fingerprint | Where {$PSItem -notin $oldFingerprint } | % {$bumpVersionType = 'Minor'; "      $PSItem"}
     '    Detecting breaking changes'
-    $oldFingerprint | Where {$_ -notin $fingerprint } | % {$bumpVersionType = 'Major'; "      $_"}
+    $oldFingerprint | Where {$PSItem -notin $fingerprint } | % {$bumpVersionType = 'Major'; "      $PSItem"}
 
     Set-Content -Path .\fingerprint -Value $fingerprint
 

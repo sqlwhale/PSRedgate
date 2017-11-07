@@ -14,7 +14,7 @@ function Backup-RedgateDatabase
     General notes
     #>
 
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, DefaultParameterSetName = 'Default')]
     Param (
         [Parameter(Mandatory)]
         # The name of the server containing the database you want to backup
@@ -30,8 +30,16 @@ function Backup-RedgateDatabase
         [string] $Type,
 
         [Parameter(Mandatory)]
-        # The location that you want this file backed up.
+        # The location that you want this file backed up. This can include any of the dynamic name parts defined by redgate at http://redgateplace.com
         [string] $Disk,
+
+        [Parameter()]
+        # The name you would like the file to have on disk. This can include any of the dynamic name parts defined at http://redgateplace.com
+        [string] $FileName = '<TYPE>_<DATABASE>_<DATETIME yyyy_mm_dd_hh_nn_ss>.sqb',
+
+        [Parameter()]
+        # To make it easier to identify files that are encrypted, I will put a suffix on the file of _ENCRYPTED. The restore command will detect this and auto prompt for password if you don't provide one.
+        [switch] $IncludeEncryptionSuffix,
 
         [parameter()]
         # If you want to encrypt this backup, provide a credential object containing a password to encrypt.
@@ -42,10 +50,10 @@ function Backup-RedgateDatabase
         [System.Management.Automation.PSCredential] $Credential,
 
         [parameter()]
-        # This flag indicates that the file is encrypted and we should pass the password to the cmdlet. This requires all files passed in the pipeline to be encrypted.
+        # This flag indicates that the file is encrypted and we should pass the password to the cmdlet.
         [switch] $Encrypted,
 
-        [Parameter(Mandatory = $false, Position = 5)]
+        [Parameter()]
         # If this command should execute the backup, or output the command.
         [switch] $Execute,
 
@@ -57,70 +65,70 @@ function Backup-RedgateDatabase
         #Specifies the password file to be used with encrypted backup files.
         [SecureString] $PASSWORDFILE,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         # The description of the backup file
         [string] $DESCRIPTION,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         # The location that you want this file backup copied to. Can be multiples separated by commas.
         $COPYTO,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [ValidateRange(0, 8)]
         # Specifies the compression level. The default value is 1.
         [int] $COMPRESSION = 1,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [ValidateRange(1, 120)]
         # The time interval between retries, in seconds, following a failed data-transfer operation.
         [int] $DISKRETRYINTERVAL = 30,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [ValidateRange(1, 20)]
         # The maximum number of times to retry a failed data-transfer operation.
         [int] $DISKRETRYCOUNT = 10,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [ValidateRange(2, 32)]
         # Specifies the number of threads to be used to create the backup, where n is an integer between 2 and 32 inclusive.
         [int] $THREADCOUNT = 2,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [ValidateRange(0, 6)]
         # The maximum number of times to retry a failed data-transfer operation.
         [int] $THREADPRIORITY = 3,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [ValidateRange(1, 360)]
         # The number of days to retain the backup files before beginning to erase them
         [int] $ERASEFILES,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [ValidateRange(1, 360)]
         # The number of days to retain the backup files before beginning to erase them
         [int] $ERASEFILES_PRIMARY,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         # Specifies a copy-only backup.
         [switch] $COPY_ONLY,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         # Specifies that files with the same name in the primary backup folder should be overwritten.
         [switch] $INIT,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         #Specifies whether a backup checksum should be created.
         [switch] $CHECKSUM,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         #This option specifies that a full backup should be created if required to take a differential or transaction log backup.
         [switch] $FULLIFREQUIRED,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         #Specifies that a log file should only be created if SQL Backup Pro encounters an error during the backup process, or the backup completes successfully but with warnings.
         [switch] $LOG_ONERROR,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         #Specifies that a log file should only be created if SQL Backup Pro encounters an error during the backup process.
         [switch] $LOG_ONERRORONLY
     )
@@ -145,26 +153,25 @@ function Backup-RedgateDatabase
 
             $options = [ordered]@{}
 
+            Write-Verbose "Getting default file locations for server $SQLServerName"
+            $defaultTargetLocations = Get-SQLServerDefaultFileLocation -SQLServerName $SQLServerName
+
+            # if you passed a credential object, we'll put it into the password field.
             if ($EncryptionCredential -and -not($options.Contains('PASSWORD')))
             {
+                Write-Verbose "Retrieving the password from the encryption object and adding PASSWORD to the options list."
                 $options.Add('PASSWORD', $EncryptionCredential.Password)
             }
 
             if (-not($Encrypted))
             {
-                #if this is not encrypted, we want to add it to the configuration array. This will strip it out of the command
+                Write-Verbose 'Adding PASSWORD and PASSWORDFILE to the config array so that it will get stripped out.'
                 $configuration += 'PASSWORD'
                 $configuration += 'PASSWORDFILE'
             }
 
-            $options = $PSBoundParameters.GetEnumerator() | Where-Object {$_.Key -notin $configuration}
-
-
-
-            if (-not($options.Contains('Disk')))
-            {
-                $options.Add('Disk', $(Get-SQLServerDefaultFileLocation -SQLServerName $SQLServerName).DefaultBackup)
-            }
+            Write-Verbose 'Removing unnecessary parameters from our option array'
+            $options = $PSBoundParameters.GetEnumerator() | Where-Object {$PSItem.Key -notin $configuration}
 
             $arguments = Get-RedgateSQLBackupParameter -Parameters $options
 
@@ -172,77 +179,92 @@ function Backup-RedgateDatabase
             switch ($Type)
             {
                 'FULL' { $backupType = 'DATABASE'}
-                'DIFF' { $backupType = 'DATABASE'; $with += 'DIFFERENTIAL, ' }
+                'DIFF' { $backupType = 'DATABASE'; $arguments += ' DIFFERENTIAL, ' }
                 'LOG' { $backupType = 'LOG'}
             }
 
-            if ($Encrypted -and -not($EncryptionCredential) -and -not($PASSWORD -or $PASSWORDFILE))
+            if ($Encrypted -and -not($EncryptionCredential -or $PASSWORD -or $PASSWORDFILE))
             {
+                Write-Verbose 'We need a credential because this file needs to be encrypted, prompt for a credential object.'
                 $EncryptionCredential = (Get-Credential -UserName 'SQL Backup' -Message 'Enter password to encrypt backup file.')
             }
 
 
-            $Disks = "DISK = ''$Disk''"
-
-
-            #if a disk value is not passed, it will look up the backup replication spot designated by get-serverlist
-            if (!$Disk)
+            Write-Verbose 'Defaulting disk to the default backup location for the server if there is no disk location supplied.'
+            if (-not($Disk))
             {
-                #add a different marker if the file is encrypted
-                if ($PASSWORD -or $PASSWORDFILE)
-                {
-                    $marker = '_ENCRYPTED'
-                }
-
-                $Disk = "''$( @{ $true = $serverListEntry.BackupLocation; $false = $serverListEntry.BackupLocation }[!$Replication] )\<database>\<type>\<TYPE>_<DATABASE>_<DATETIME yyyy_mm_dd_hh_nn_ss>$marker.sqb''"
+                $Disk = $defaultTargetLocations.DefaultBackup
             }
 
-            if ($CommandLine)
+
+            if (($PASSWORD -or $PASSWORDFILE) -and ($IncludeEncryptionSuffix))
             {
-                $command = ''
+                Write-Verbose 'Adding _ENCRYPTED suffix to file name so that you can detect encryption automatically.'
+                $Disk = $Disk.Replace('.sqb', '_ENCRYPTED.sqb')
             }
-            else
+
+            $FullPath = " TO DISK = ''$Disk''"
+
+            $backupCommand = "EXEC master..sqlbackup '-SQL ""BACKUP $backupType [$DatabaseName] $FullPath $arguments""'"
+
+            if ($PSCmdlet.ShouldProcess($SQLServerName, $backupCommand))
             {
-                $backupCommand = "EXEC master..sqlbackup '-SQL ""BACKUP $backupType [$DatabaseName] TO DISK = $Disk $with""'"
                 $command = "
                     DECLARE @errorcode INT
-                    DECLARE @sqlerrorcode INT
+                          , @sqlerrorcode INT
                     $($backupCommand), @errorcode OUTPUT, @sqlerrorcode OUTPUT;
                     IF (@errorcode >= 500) OR (@sqlerrorcode <> 0)
                     BEGIN
-                    RAISERROR ('SQL Backup failed with exit code: %d  SQL error code: %d', 16, 1, @errorcode, @sqlerrorcode)
-                END"
-            }
+                        RAISERROR ('SQL Backup failed with exit code: %d  SQL error code: %d', 16, 1, @errorcode, @sqlerrorcode)
+                    END"
 
-            if ($Execute)
-            {
-                $sqlAdapter = New-Object System.Data.SqlClient.SqlDataAdapter
-                $dataSet = New-Object System.Data.DataSet
-                $sqlConnectString = "Data Source=$SQLServerName; Initial Catalog=master; Integrated Security=True"
-                $sqlConnection = New-Object System.Data.SqlClient.SqlConnection($sqlConnectString)
-
-                $sqlConnection.Open()
+                $params = @{
+                    ServerInstance = $SQLServerName
+                    Database       = 'master'
+                    Query          = $command
+                    Credential     = $Credential
+                    QueryTimeout   = 7200
+                    As             = 'SingleValue'
+                }
 
                 #This will output the command in a formatted way
-                Write-Verbose "`n`nBacking up database $DatabaseName from $SQLServerName`n"
-                Write-Verbose $command.Replace(',', "`n,")
+                Write-Verbose ("`n`nBacking up database $DatabaseName from $SQLServerName`n")
+                Write-Verbose ($command.Replace(',', "`n,") | Out-String)
 
-                $SQLCommand = New-Object system.Data.SqlClient.SqlCommand ($command, $sqlConnection)
-                $SQLCommand.CommandTimeout = 7200
-                $sqlAdapter.SelectCommand = $SQLCommand
-                $sqlAdapter.Fill($dataSet) | Out-Null
-                $sqlConnection.Close()
-                Write-Verbose $dataSet.Tables[0]
-            }
-            else
-            {
-                Write-Output $backupCommand
+                try
+                {
+                    $result = Invoke-Sqlcmd2 @params -ErrorAction Stop
+                }
+                catch
+                {
+                    # exception message comes through like this: Exception calling "Fill" with "1" argument(s): "SQL Backup failed with exit code: 850;  SQL error code: 0"
+                    # we want to get the SQL Backup exit code, and the SQL error code.
+                    $message = $PSItem.Exception.Message.TrimEnd('"')
+                    $message = $message.Split('"')[-1]
+                    $errors = $message.Split(';').Trim()
+                    foreach ($item in $errors)
+                    {
+                        $properties = $item.Split(':').Trim()
+                        $errorLabel = $properties[0]
+                        $errorNumber = $properties[1]
+                        if ( $errorLabel -eq 'SQL Backup failed with exit code' -and $errorNumber -ne 0)
+                        {
+                            Write-Warning "SQL Backup failed with exit code: `n`n$(Get-RedgateSQLBackupError -ErrorNumber $errorNumber)"
+                        }
+                        elseif ($errorNumber -gt 0)
+                        {
+                            Write-Warning "$errorLabel : `n`n $errorNumber"
+                        }
+                    }
+                    throw [System.Exception] 'There were errors performing the restore. See warnings above.'
+                }
+                Write-Verbose ($result | Out-String)
             }
         }
         catch
         {
-            Write-Output  -Object $_.Exception | Format-List -Force
-            break;
+            Write-Output  $PSItem.Exception | Format-List -Force
+            break
         }
     }
     END {}

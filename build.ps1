@@ -17,16 +17,10 @@ Get-PackageProvider -Name NuGet -ForceBootstrap | Out-Null
 $modules = @('InvokeBuild', 'PSDeploy', 'BuildHelpers', 'PSScriptAnalyzer')
 foreach ($module in $modules)
 {
-    # if (-not(Get-Module -ListAvailable -Name $module))
-    # {
     Install-Module InvokeBuild, PSDeploy, BuildHelpers, PSScriptAnalyzer -force -Scope CurrentUser
-    # }
 }
 
-# if (-not(Get-Module -ListAvailable -Name $module))
-# {
 Install-Module Pester -Force -SkipPublisherCheck -Scope CurrentUser
-# }
 
 Write-Output "  Import Dependent Modules"
 Import-Module InvokeBuild, BuildHelpers, PSScriptAnalyzer
@@ -35,6 +29,7 @@ Set-BuildEnvironment -Force
 
 Write-Output "  InvokeBuild"
 Invoke-Build $Task -Result result
+
 if ($Result.Error)
 {
     exit 1

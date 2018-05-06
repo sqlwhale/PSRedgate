@@ -14,18 +14,25 @@ Write-Output "Starting build"
 Write-Output "  Install Dependent Modules"
 Get-PackageProvider -Name NuGet -ForceBootstrap | Out-Null
 
-$modules = @('InvokeBuild', 'PSDeploy', 'BuildHelpers', 'PSScriptAnalyzer')
+Write-Output 'Installing BuildHelpers to assist with build process.'
+Install-Module 'BuildHelpers' -force -Scope CurrentUser
+
+$null = Set-BuildEnvironment -Path "$PSScriptRoot\PSRedgate" -Force
+$environmentDetails = Get-BuildEnvironmentDetail
+
+$modules = @('InvokeBuild', 'PSDeploy', 'BuildHelpers', 'PSScriptAnalyzer', 'Pester')
+Write-Output "  Installing and importing dependent modules."
 foreach ($module in $modules)
 {
-    Install-Module InvokeBuild, PSDeploy, BuildHelpers, PSScriptAnalyzer -force -Scope CurrentUser
+    if ($module -notin $environmentDetails.ModulesAvailable.Name)
+    {
+        Install-Module $module -SkipPublisherCheck -Force -Scope CurrentUser
+    }
+    if ($module -notin $environmentDetails.ModulesLoaded.Name)
+    {
+        Import-Module $module -Force
+    }
 }
-
-Install-Module Pester -Force -SkipPublisherCheck -Scope CurrentUser
-
-Write-Output "  Import Dependent Modules"
-Import-Module InvokeBuild, BuildHelpers, PSScriptAnalyzer
-
-Set-BuildEnvironment -Force
 
 Write-Output "  InvokeBuild"
 Invoke-Build $Task -Result result

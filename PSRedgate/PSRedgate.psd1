@@ -24,7 +24,7 @@
     Author            = 'Justin Whaley'
 
     # Company or vendor of this module
-    CompanyName       = 'Unknown'
+    CompanyName       = 'SQL Whale'
 
     # Copyright statement for this module
     Copyright         = '(c) 2017 Justin Whaley. All rights reserved.'

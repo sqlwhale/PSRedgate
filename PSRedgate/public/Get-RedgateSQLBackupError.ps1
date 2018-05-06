@@ -21,7 +21,7 @@ function Get-RedgateSQLBackupError
 
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
+        [Parameter()]
         # The error number reported by the application that you would like to retrieve the description for.
         [int] $ErrorNumber,
 
@@ -57,7 +57,7 @@ function Get-RedgateSQLBackupError
         $private:PrivateData = $MyInvocation.MyCommand.Module.PrivateData
 
         $errorList = $private:PrivateData['errorList']
-        $dataLocation = $private:PrivateData['DataLocation']
+        $dataLocation = "$($env:LOCALAPPDATA)\PSRedgate\data"
         $cacheFile = "$dataLocation\errorList.xml"
 
         # if we were unable to pull in the error list from private data, let's go ahead and make sure that we know where the data file goes.

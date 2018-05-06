@@ -69,7 +69,7 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = @('Backup-RedgateDatabase','Get-RedgateBackupFileInfo','Get-RedGateInstallationInfo','Get-RedgateMultiScriptConfigurationFileInfo','Get-RedgateSQLBackupError','Invoke-RedgateSQLCompare','Restore-RedgateDatabase','Set-RedgateMultiScriptConfigurationFileInfo')
+    FunctionsToExport = @('Backup-RedgateDatabase', 'Get-RedgateBackupFileInfo', 'Get-RedGateInstallationInfo', 'Get-RedgateMultiScriptConfigurationFileInfo', 'Get-RedgateSQLBackupError', 'Invoke-RedgateSQLCompare', 'Restore-RedgateDatabase', 'Set-RedgateMultiScriptConfigurationFileInfo')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport   = @()
@@ -112,7 +112,6 @@
         } # End of PSData hashtable
 
         # The location that we store data files needed for caching
-        DataLocation    = "$($env:LOCALAPPDATA)\PSRedgate\data"
         PublicLocation  = ".\public"
         PrivateLocation = ".\private"
     } # End of PrivateData hashtable

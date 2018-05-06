@@ -16,7 +16,7 @@ function Get-RedgateSQLBackupError
         .EXAMPLE
             Get-RedgateSQLBackupError -RefreshErrorCodes
 
-            Will update the local cache used by this command by scraping Redgate's SQL Backup website for their documentation.
+            Will update the local cache used by this command by scraping Redgate's SQL Backup website for their documentation. Useful if you think your codes are out-dated
    #>
 
     [CmdletBinding()]
@@ -36,6 +36,17 @@ function Get-RedgateSQLBackupError
     )
     BEGIN
     {
+
+        # There can be issues when pulling data over https if your network has rules about TLS1.1 vs TLS1.2
+        # TODO determine if this is kosher and effective
+        if ([Net.ServicePointManager]::SecurityProtocol -le [Net.SecurityProtocolType]::Tls12)
+        {
+            # It's not safe or good form to change environment settings. Storing current value to reset at the end of the call.
+            Write-Verbose 'Current TLS protocol is set to a value lower than some allow. Temporarily using higher TLS protocol.'
+            $currentSecurityProtocol = [Net.ServicePointManager]::SecurityProtocol
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        }
+
         $SQLBackupVersionDocumentationUrl = @{
             6 = 'https://documentation.red-gate.com/sbu6/errors-and-warnings/sql-backup-errors-500-5292'
             7 = 'https://documentation.red-gate.com/sbu7/errors-and-warnings/sql-backup-errors-500-5292'
@@ -52,9 +63,10 @@ function Get-RedgateSQLBackupError
         # if we were unable to pull in the error list from private data, let's go ahead and make sure that we know where the data file goes.
         if (-not($errorList))
         {
-            # just in case the folder doesn't exist or gets deleted.
+            Write-Verbose 'No error list exists on file. Lets create a cache file to avoid too many web calls.'
             if (-not(Test-Path $dataLocation))
             {
+                Write-Verbose 'We need to create a location on disk to store the error list cache.'
                 New-Item -Path $dataLocation -ItemType Directory | Out-Null
             }
 
@@ -80,6 +92,7 @@ function Get-RedgateSQLBackupError
                 Write-Verbose -Message "Pulling the latest values from Redgate SQL Backup Error Codes"
                 $response = Invoke-WebRequest $SQLBackupVersionDocumentationUrl[$SQLBackupVersionNumber]
 
+                Write-Verbose 'Data retrieved. Parsing backup error codes.'
                 $entries = ( $response.ParsedHtml.getElementsByTagName("table") | Select-Object -First 1 ).rows
                 $table = @()
                 foreach ($entry in $entries)
@@ -122,6 +135,12 @@ function Get-RedgateSQLBackupError
         {
             Write-Verbose "caching error codes to the file '$cacheFile'"
             $errorList | Export-Clixml -Path $cacheFile  -Encoding ASCII -Force
+        }
+
+        if ($currentSecurityProtocol)
+        {
+            Write-Verbose 'Setting the SecurityProtocol back to the previous value.'
+            [Net.ServicePointManager]::SecurityProtocol = $currentSecurityProtocol
         }
 
         $private:PrivateData['errorList'] = $errorList

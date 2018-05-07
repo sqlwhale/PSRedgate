@@ -383,6 +383,7 @@ function Restore-RedgateDatabase
                     $options.Add($PSItem.Key, $PSItem.Value)
                 }
 
+                # This will create an undo file so that you can put it into read-only standby mode.
                 if ($PSItem.Key -eq 'READONLY')
                 {
                     $options.Add('STANDBY', "$($StandbyLocation)\UNDO_$DatabaseName.dat")
@@ -401,11 +402,11 @@ function Restore-RedgateDatabase
                     {
                         $SourceSQLServerName = $TargetSQLServerName
                     }
-                    $databaseFiles = Get-SQLServerDatabaseFiles -SQLServerName $SourceSQLServerName -DatabaseName $DatabaseName
+                    $databaseFiles = Get-SQLServerDatabaseFile -SQLServerName $SourceSQLServerName -DatabaseName $DatabaseName
                     if (-not($databaseFiles))
                     {
                         Write-Verbose "Couldn't find file info for $DatabaseName on $SourceSQLServerName. Trying to locate the info on the target $TargetSQLServerName"
-                        $databaseFiles = Get-SQLServerDatabaseFiles -SQLServerName $TargetSQLServerName -DatabaseName $DatabaseName
+                        $databaseFiles = Get-SQLServerDatabaseFile -SQLServerName $TargetSQLServerName -DatabaseName $DatabaseName
                     }
 
                     Write-Verbose "Finding the logical and physical file(s) names for the data so that we can rename the database."

@@ -26,12 +26,12 @@ function Get-SQLServerDatabaseFile
         There might be more than one file for either of these. The file ordinal will tell you the file index.
 
     .EXAMPLE
-        Get-SQLServerDatabaseFiles -SQLServerName SQLEXAMPLE1 -DatabaseName ExampleDB
+        Get-SQLServerDatabaseFile -SQLServerName SQLEXAMPLE1 -DatabaseName ExampleDB
 
         Return the files for the database specified on the sql server provided.
 
     .EXAMPLE
-        Get-SQLServerDatabaseFiles -SQLServerName SQLEXAMPLE1
+        Get-SQLServerDatabaseFile -SQLServerName SQLEXAMPLE1
 
         Return the files used by all databases in use on the sql server provided.
 

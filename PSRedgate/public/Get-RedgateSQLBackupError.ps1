@@ -74,7 +74,7 @@ function Get-RedgateSQLBackupError
             Write-Verbose 'Loading error codes from cache file.'
             if (Test-Path $cacheFile)
             {
-                $errorList = Import-Clixml -Path $cacheFile
+                $errorList = Import-CliXML -Path $cacheFile
             }
             else
             {
